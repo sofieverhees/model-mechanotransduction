@@ -1,5 +1,6 @@
 # Code for 'Mathematical Modelling of Mechanotransduction via RhoA Signalling Pathways' 
 Sofie Verhees<sup>1</sup>, Mariya Ptashnyk<sup>1</sup>, Chandrasekhar Venkataraman<sup>2</sup>
+
 <sup>1</sup>Department of Mathematics, The Maxwell Institute for Mathematical Sciences, Heriot-Watt University, Edinburgh; <sup>2</sup>Department of Mathematics, University of Sussex, Brighton
 
 ## Abstract
