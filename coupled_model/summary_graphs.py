@@ -301,6 +301,6 @@ for bcs in ['_partfixed','_neumann']:
         by_label = dict(zip(labels, handles))
         fig.legend(by_label.values(), by_label.keys(), bbox_to_anchor=(0.5, -0.05), loc="lower center", ncol = len(ax.lines))
         
-        plt.savefig('../../../new_results/figures/AllGraphsMean'+str(bcs)+str(stim)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+'.png',bbox_inches='tight')
+        plt.savefig('../results/figures/AllGraphsMean'+str(bcs)+str(stim)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+'.png',bbox_inches='tight')
         #plt.show()
         plt.close()
