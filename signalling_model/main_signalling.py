@@ -16,6 +16,7 @@ parser.add_argument("-twoDstim", type=str, required=True)
 args = parser.parse_args()
 print(args)
 
+# define parameters from given above
 T = args.T
 dt = args.dt
 E = args.E
@@ -26,11 +27,8 @@ D1 = args.D1
 # Model parameters
 cf = 1
 cr = 1
-
 C = 3.25
-
 gamma = 77.56
-
 D2 = D1
 D4 = 3
 
@@ -39,16 +37,15 @@ mesh = Mesh() #define
 meshnr = 1
 
 # write xdmf file from msh file (only need to do this once)
-msh = meshio.read('../mesh/'+mesh_name+'.msh') #read msh file
-meshio.write('../mesh/'+mesh_name+'.xdmf', meshio.Mesh(points=msh.points, cells={"tetra": msh.cells_dict["tetra"]})) #convert to xdmf file
+msh = meshio.read('../meshes/'+mesh_name+'.msh') #read msh file
+meshio.write('../meshes/'+mesh_name+'.xdmf', meshio.Mesh(points=msh.points, cells={"tetra": msh.cells_dict["tetra"]})) #convert to xdmf file
 
-with XDMFFile('../mesh/'+mesh_name+'.xdmf') as xdmf: 
+with XDMFFile('../meshes/'+mesh_name+'.xdmf') as xdmf: 
     xdmf.read(mesh) #write xdmf file to mesh
-File('../mesh/'+mesh_name+'.pvd').write(mesh) #save mesh to new pvd file
+File('../meshes/'+mesh_name+'.pvd').write(mesh) #save mesh to new pvd file
 
-
-#for loop over each mesh refinement
-surface = BoundaryMesh(mesh, 'exterior') #find surface mesh
+#find surface mesh
+surface = BoundaryMesh(mesh, 'exterior') 
 
 # Defining relationship between vertices of the two meshes
 vs_2_vb = surface.entity_map(0)
@@ -71,12 +68,10 @@ area = interpolate(area1, S)
 ar = assemble(area*dx)
 
 #define nr
-print(vl, ar)
 nr = vl/ar
-print(nr)
 
 if twoDstim == '2D':
-    #make bigE a function for 2xD stimulus
+    #make bigE a function for 2D stimulus
     # boundary conditions for linear elasticity:
     def Boundary(x, on_boundary):
         return on_boundary and near(x[2],0) #(-0.99 > x[0] > -1. or 1. > x[0] > 0.99) #((abs(x[0] - 0.9) < DOLFIN_EPS) or (abs(x[0] + 0.9) < DOLFIN_EPS)) #near(x[0],1) #(x[0] < -0.9 or x[0] > 0.9)  #near(x[0], 0)
@@ -93,18 +88,17 @@ if twoDstim == '2D':
             return near(x[2],0)
     bottom = Bottom()
 
-    # Initialize mesh function for interior domains
     # Create mesh functions over the cell facets
     sub_domains = MeshFunction("size_t", surface, surface.topology().dim())
 
-    # Mark all facets as sub domain 3
+    # Mark all facets as sub domain 0 except for the bottom, which is marked as 1
     sub_domains.set_all(0)
     bottom.mark(sub_domains, 1)
 
     dsx = Measure('dx', domain=surface, subdomain_data=sub_domains, metadata={'quadrature_degree': 3})
 
     # Save sub domains to file
-    file = File("../output/subdomains.pvd")
+    file = File("../results/subdomains.pvd")
     file << sub_domains
     
 elif twoDstim == '2xD':
@@ -167,13 +161,10 @@ a_ca = ca*va*dx + dt*D2*inner(grad(ca), grad(va))*dx + dt*k1*ca*va*dx
 A_cd = assemble(a_cd)
 A_ca = assemble(a_ca)
 
-# Octput file
-file_cd = File("../../../new_results/simulations/rhomodel"+twoDstim+"_cd_reduced_dt="+str(dt)+"_T="+str(T)+"_D="+str(D1)+"_"+str(E)+"E.pvd", "compressed")
-file_ca = File("../../../new_results/simulations/rhomodel"+twoDstim+"_ca_reduced_dt="+str(dt)+"_T="+str(T)+"_D="+str(D1)+"_"+str(E)+"E.pvd", "compressed")
-file_pa = File("../../../new_results/simulations/rhomodel"+twoDstim+"_p_reduced_dt="+str(dt)+"_T="+str(T)+"_D="+str(D1)+"_"+str(E)+"E.pvd", "compressed")
-#file_cd = File("../../../new_results/simulations/rhomodel_cd_reduced_check_D="+str(D1)+"_"+str(E)+"E.pvd", "compressed")
-#file_ca = File("../../../new_results/simulations/rhomodel_ca_reduced_check_D="+str(D1)+"_"+str(E)+"E.pvd", "compressed")
-#file_pa = File("../../../new_results/simulations/rhomodel_p_reduced_check_D="+str(D1)+"_"+str(E)+"E.pvd", "compressed")
+# Octput files that eventually create Figure 21 and 23
+file_cd = File("../results/simulations/rhomodel"+twoDstim+"_cd_reduced_dt="+str(dt)+"_T="+str(T)+"_D="+str(D1)+"_"+str(E)+"E.pvd", "compressed")
+file_ca = File("../results/simulations/rhomodel"+twoDstim+"_ca_reduced_dt="+str(dt)+"_T="+str(T)+"_D="+str(D1)+"_"+str(E)+"E.pvd", "compressed")
+file_pa = File("../results/simulations/rhomodel"+twoDstim+"_p_reduced_dt="+str(dt)+"_T="+str(T)+"_D="+str(D1)+"_"+str(E)+"E.pvd", "compressed")
 
 # initialize functions
 cd_new = Function(W)
@@ -223,13 +214,10 @@ for n in range(0,N):
         b_pa = assemble(L_pa)
     else:
         a_pa = pa*wa*dx + dt*D4*inner(grad(pa), grad(wa))*dx + dt*k4*pa*wa*dx + dt*k5/cr*(gamma*surf_ca*surf_ca*surf_ca*surf_ca*surf_ca+1)/nr*pa*wa*dx
-        #a_pa = pa*wa*dx + dt*D4*inner(grad(pa), grad(wa))*dx + dt*k4*pa*wa*dx
         A_pa = assemble(a_pa)
         
         # Weak statement of the rhs of p
-        #pa_avg = assemble(pa1*dx)
         L_pa = pa1*wa*dx + dt*k5/cr*(gamma*surf_ca*surf_ca*surf_ca*surf_ca*surf_ca+1)*(pd0+pa0/nr)*wa*dx
-        #L_pa = pa1*wa*dx + dt*k5/cr*(gamma*surf_ca*surf_ca*surf_ca*surf_ca*surf_ca+1)*(pd0+pa0/nr-pa_avg/vl)*wa*dx
         b_pa = assemble(L_pa)
 
     # now solve for p
@@ -241,13 +229,11 @@ for n in range(0,N):
     ca_der = np.sqrt(assemble(((ca_new-ca1)/dt)**2*dx(mesh))/vl)
     cd_der = np.sqrt(assemble(((cd_new-cd1)/dt)**2*dx(mesh))/vl)
     pa_der = np.sqrt(assemble(((pa_new-pa1)/dt)**2*dx(surface))/ar)
-    #u_der = np.sqrt(assemble(((u_new-u1)/dt)**2*dx(mesh))/vl)
     # another way to compute this norm: u_err = errornorm(ue, u, norm_type='L2', degree_rise=3)
 
     ca_temp = np.sqrt(assemble((ca1)**2*dx(mesh))/vl)
     cd_temp = np.sqrt(assemble((cd1)**2*dx(mesh))/vl)
     pa_temp = np.sqrt(assemble((pa1)**2*dx(surface))/ar)
-    #u_temp = np.sqrt(assemble((u1)**2*dx(mesh))/vl)
 
     ca_min = np.min(ca1.compute_vertex_values())
     ca_max = np.max(ca1.compute_vertex_values())
@@ -256,7 +242,8 @@ for n in range(0,N):
     pa_min = np.min(pa1.compute_vertex_values())
     pa_max = np.max(pa1.compute_vertex_values())
 
-    temp_der_stats[:,n] = np.array([ca_der, cd_der, pa_der, t]) #store L2 norm
+    #store L2 norm and min/max at each time step
+    temp_der_stats[:,n] = np.array([ca_der, cd_der, pa_der, t]) 
     temp_stats[:,n] = np.array([ca_temp, cd_temp, pa_temp, t])
     temp_stats_minmax[:,n] = np.array([ca_min, ca_max, cd_min, cd_max, pa_min, pa_max])
 
@@ -271,15 +258,10 @@ for n in range(0,N):
     pa1.assign(pa_new)
     t += dt
 
-np.save('../../../new_results/temp/tempstats0_'+twoDstim+'-der-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_D='+str(D1)+'_'+str(E)+'E', temp_der_stats)
-np.save('../../../new_results/temp/tempstats0_'+twoDstim+'-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_D='+str(D1)+'_'+str(E)+'E', temp_stats)
-np.save('../../../new_results/temp/tempstats0_'+twoDstim+'-minmax-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_D='+str(D1)+'_'+str(E)+'E', temp_stats_minmax)
-#np.save('../../../new_results/temp/tempstats0-der-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_D='+str(D1)+'_'+str(E)+'E', temp_der_stats)
-#np.save('../../../new_results/temp/tempstats0-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_D='+str(D1)+'_'+str(E)+'E', temp_stats)
-#np.save('../../../new_results/temp/tempstats0-minmax-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_D='+str(D1)+'_'+str(E)+'E', temp_stats_minmax)
-#np.save('../../../new_results/temp/tempstats0-der-m'+str(meshnr)+'_check_D='+str(D1)+'_'+str(E)+'E', temp_der_stats)
-#np.save('../../../new_results/temp/tempstats0-m'+str(meshnr)+'_check_D='+str(D1)+'_'+str(E)+'E', temp_stats)
-#np.save('../../../new_results/temp/tempstats0-minmax-m'+str(meshnr)+'_check_D='+str(D1)+'_'+str(E)+'E', temp_stats_minmax)
+# save numpy arrays with L2 norm and min/max at each timestep
+np.save('../results/temp/tempstats0_'+twoDstim+'-der-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_D='+str(D1)+'_'+str(E)+'E', temp_der_stats)
+np.save('../results/temp/tempstats0_'+twoDstim+'-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_D='+str(D1)+'_'+str(E)+'E', temp_stats)
+np.save('../results/temp/tempstats0_'+twoDstim+'-minmax-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_D='+str(D1)+'_'+str(E)+'E', temp_stats_minmax)
         
 # plot the temporal statistics
 fig, axs = plt.subplots(2, 2, figsize=(12,12))
@@ -287,40 +269,29 @@ axs = axs.flatten()
 axs[0].plot(temp_der_stats[3,:], temp_der_stats[0,:])
 axs[1].plot(temp_der_stats[3,:], temp_der_stats[1,:])
 axs[2].plot(temp_der_stats[3,:], temp_der_stats[2,:])
-#axs[3].plot(temp_der_stats[4,:], temp_der_stats[3,:])
-#axs[3].plot(temp_der_stats[4,1:], temp_der_stats[3,1:])
 for i in range(3):
-    #axs[i].set_yscale('log')
     axs[i].set_xlabel('Time')
     axs[i].set_ylabel('L2-norm')
     axs[i].grid(alpha=0.3, which='both', linestyle=':')
 axs[0].set_title('$||\partial_t c_a||_{L^2(Y)}$')
 axs[1].set_title('$||\partial_t c_d||_{L^2(Y)}$')
 axs[2].set_title('$||\partial_t p_a||_{L^2(\Gamma)}$')
-#axs[3].set_title('$||\partial_t u||_{L^2(Y)}$')
-plt.savefig('../../../new_results/figures/tempstats0_'+twoDstim+'-der-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_D='+str(D1)+'_'+str(E)+'E.png')
-#plt.savefig('../../../new_results/figures/tempstats0-der-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_D='+str(D1)+'_'+str(E)+'E.png')
+plt.savefig('../results/figures/tempstats0_'+twoDstim+'-der-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_D='+str(D1)+'_'+str(E)+'E.png')
 #plt.show()
 plt.close()
 
-# plot the temporal statistics
 fig, axs = plt.subplots(2, 2, figsize=(12,12))
 axs = axs.flatten()
 axs[0].plot(temp_stats[3,:], temp_stats[0,:])
 axs[1].plot(temp_stats[3,:], temp_stats[1,:])
 axs[2].plot(temp_stats[3,:], temp_stats[2,:])
-#axs[3].plot(temp_stats[4,:], temp_stats[3,:])
-#axs[3].plot(temp_stats[4,1:], temp_stats[3,1:])
 for i in range(3):
-    #axs[i].set_yscale('log')
     axs[i].set_xlabel('Time')
     axs[i].set_ylabel('L2-norm')
     axs[i].grid(alpha=0.3, which='both', linestyle=':')
 axs[0].set_title('$||c_a||_{L^2(Y)}$')
 axs[1].set_title('$||c_d||_{L^2(Y)}$')
 axs[2].set_title('$||p_a||_{L^2(\Gamma)}$')
-#axs[3].set_title('$||u||_{L^2(Y)}$')
-plt.savefig('../../../new_results/figures/tempstats0_'+twoDstim+'-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_D='+str(D1)+'_'+str(E)+'E.png')
-#plt.savefig('../../../new_results/figures/tempstats0-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_D='+str(D1)+'_'+str(E)+'E.png')
+plt.savefig('../results/figures/tempstats0_'+twoDstim+'-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_D='+str(D1)+'_'+str(E)+'E.png')
 #plt.show()
 plt.close()
