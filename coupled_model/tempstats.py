@@ -55,7 +55,7 @@ for bigE in Es:
             #print('STATE:', bcs, stim, meshnr, coupling, bigE)
 
             # find the mean of certain values from simulation results
-            file_ca = pv.read("../../../new_results/simulations/coupled"+str(coupling)+str(stim)+"_ca"+str(bcs)+"_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+"_"+str(bigE)+"E000"+t_str+".vtu")
+            file_ca = pv.read("../results/simulations/coupled"+str(coupling)+str(stim)+"_ca"+str(bcs)+"_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+"_"+str(bigE)+"E000"+t_str+".vtu")
             cell_ca = file_ca.point_data_to_cell_data()
             ca_values = cell_ca.get_array(cell_ca.array_names[0])
 
@@ -65,7 +65,7 @@ for bigE in Es:
             ca[order[j],i] = np.sum(ca_values*cell_volumes) / tot_vol
             #print('mean ca', np.sum(ca_values*cell_volumes) / tot_vol)
             
-            file_pa = pv.read("../../../new_results/simulations/coupled"+str(coupling)+str(stim)+"_p"+str(bcs)+"_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+"_"+str(bigE)+"E000"+t_str+".vtu")
+            file_pa = pv.read("../results/simulations/coupled"+str(coupling)+str(stim)+"_p"+str(bcs)+"_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+"_"+str(bigE)+"E000"+t_str+".vtu")
             cell_pa = file_pa.point_data_to_cell_data()
             pa_values = cell_pa.get_array(cell_pa.array_names[0])
 
@@ -75,7 +75,7 @@ for bigE in Es:
             pa[order[j],i] = (np.sum(pa_values*cell_areas) / tot_vol)*10**(-15)
             #print('mean pa', np.sum(pa_values*cell_areas) / tot_vol)
             
-            file_u = pv.read("../../../new_results/simulations/coupled"+str(coupling)+str(stim)+"_u"+str(bcs)+"_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+"_"+str(bigE)+"E000"+t_str+".vtu")
+            file_u = pv.read("../results/simulations/coupled"+str(coupling)+str(stim)+"_u"+str(bcs)+"_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+"_"+str(bigE)+"E000"+t_str+".vtu")
             diverg = file_u.compute_derivative(gradient=False, divergence=True)
             cell_divu = diverg.point_data_to_cell_data()
             divu_values = cell_divu.get_array('divergence')
@@ -86,7 +86,7 @@ for bigE in Es:
             u_div_l2[order[j],i] = np.sum(divu_values*cell_volumes) / tot_vol
             #print('mean div(u)', np.sum(divu_values*cell_volumes) / tot_vol)
             
-            file_ec = pv.read("../../../new_results/simulations/coupled"+str(coupling)+str(stim)+"_ec"+str(bcs)+"_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+"_"+str(bigE)+"E000"+t_str+".vtu")
+            file_ec = pv.read("../results/simulations/coupled"+str(coupling)+str(stim)+"_ec"+str(bcs)+"_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+"_"+str(bigE)+"E000"+t_str+".vtu")
             cell_ec = file_ec.point_data_to_cell_data()
             ec_values = cell_ec.get_array(cell_ec.array_names[0])
 
@@ -107,7 +107,7 @@ for bigE in Es:
                 #print('STATE:', bcs, stim, meshnr, coupling, bigE)
 
                 # find the mean of certain values from simulation results
-                file_ca = pv.read("../../../new_results/simulations/coupled"+str(coupling)+str(stim)+"_ca"+str(bcs)+"_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+'_C1='+str(C1)+"_"+str(bigE)+"E000"+t_str+".vtu")
+                file_ca = pv.read("../results/simulations/coupled"+str(coupling)+str(stim)+"_ca"+str(bcs)+"_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+'_C1='+str(C1)+"_"+str(bigE)+"E000"+t_str+".vtu")
                 cell_ca = file_ca.point_data_to_cell_data()
                 ca_values = cell_ca.get_array(cell_ca.array_names[0])
 
@@ -117,7 +117,7 @@ for bigE in Es:
                 ca[order[j],i] = np.sum(ca_values*cell_volumes) / tot_vol
                 #print('mean ca', np.sum(ca_values*cell_volumes) / tot_vol)
                 
-                file_pa = pv.read("../../../new_results/simulations/coupled"+str(coupling)+str(stim)+"_p"+str(bcs)+"_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+'_C1='+str(C1)+"_"+str(bigE)+"E000"+t_str+".vtu")
+                file_pa = pv.read("../results/simulations/coupled"+str(coupling)+str(stim)+"_p"+str(bcs)+"_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+'_C1='+str(C1)+"_"+str(bigE)+"E000"+t_str+".vtu")
                 cell_pa = file_pa.point_data_to_cell_data()
                 pa_values = cell_pa.get_array(cell_pa.array_names[0])
 
@@ -127,7 +127,7 @@ for bigE in Es:
                 pa[order[j],i] = (np.sum(pa_values*cell_areas) / tot_vol)*10**(-15)
                 #print('mean pa', np.sum(pa_values*cell_areas) / tot_vol)
                 
-                file_u = pv.read("../../../new_results/simulations/coupled"+str(coupling)+str(stim)+"_u"+str(bcs)+"_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+'_C1='+str(C1)+"_"+str(bigE)+"E000"+t_str+".vtu")
+                file_u = pv.read("../results/simulations/coupled"+str(coupling)+str(stim)+"_u"+str(bcs)+"_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+'_C1='+str(C1)+"_"+str(bigE)+"E000"+t_str+".vtu")
                 diverg = file_u.compute_derivative(gradient=False, divergence=True)
                 cell_divu = diverg.point_data_to_cell_data()
                 divu_values = cell_divu.get_array('divergence')
@@ -138,7 +138,7 @@ for bigE in Es:
                 u_div_l2[order[j],i] = np.sum(divu_values*cell_volumes) / tot_vol
                 #print('mean div(u)', np.sum(divu_values*cell_volumes) / tot_vol)
                 
-                file_ec = pv.read("../../../new_results/simulations/coupled"+str(coupling)+str(stim)+"_ec"+str(bcs)+"_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+'_C1='+str(C1)+"_"+str(bigE)+"E000"+t_str+".vtu")
+                file_ec = pv.read("../results/simulations/coupled"+str(coupling)+str(stim)+"_ec"+str(bcs)+"_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+'_C1='+str(C1)+"_"+str(bigE)+"E000"+t_str+".vtu")
                 cell_ec = file_ec.point_data_to_cell_data()
                 ec_values = cell_ec.get_array(cell_ec.array_names[0])
 
@@ -235,6 +235,6 @@ handles, labels = plt.gca().get_legend_handles_labels()
 by_label = dict(zip(labels, handles))
 fig.legend(by_label.values(), by_label.keys(), bbox_to_anchor=(0.5, -0.05), loc="lower center", ncol = len(ax.lines))
 
-plt.savefig('../../../new_results/figures/TimeGraphsMean'+str(bcs)+str(stim)+"_m"+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+'.png',bbox_inches='tight')
+plt.savefig('../results/figures/TimeGraphsMean'+str(bcs)+str(stim)+"_m"+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+'.png',bbox_inches='tight')
 #plt.show()
 plt.close()
