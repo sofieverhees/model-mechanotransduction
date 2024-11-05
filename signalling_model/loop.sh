@@ -1,9 +1,9 @@
 #!/bin/bash
 # run different versions of the coupled model
 
-T = 10
-dt = 0.05
-mesh_name = 'cell_substrate'
+T=10
+dt=0.05
+mesh_name='cell_substrate'
 
 for D1 in 40 100 #40 100
 do
