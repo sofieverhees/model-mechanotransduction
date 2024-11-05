@@ -59,11 +59,13 @@ For the coupled model, there is one extra file:
   - `twoDstim`: determines where the substrate stiffness has effect with `yes` meaning only on the bottom boundary (2xD stimulus) and `no` meaning everywhere on the boundary (3D stimulus).
   - `partfixed`: determines which boundary condition is put on u with `yes` meaning no deformation in the vertical direction on the bottom of the cell (rigid substrate) and `no` meaning only the force boundary condition.
 
-The resulting files will be named accordingly, e.g. for the 'reduced model' simululation results are named 
-> rhomodel_ _twoDstim_ _ _var_ _reduced_dt= _dt_ _T= _T_ _D= _D1_ _E_ E.pvd'
-where var is the variable $\phi_d$ for cd, $\phi_a$ for ca and $\rho_a$ for p; and for the coupled model simulations results are named
-> 'coupled _coupling_ 2D_var_(partfixed/neumann)_m(0/1)_dt=.._T=.._k6=.._..E.pvd'
-where var is the variable \phi_d for cd, \phi_a for ca and \rho_a for p and coupling(1/2/3/4) determines the coupling between the mechanics and the chemistry as described before and if 2D is not there, it is the 3D stimulus and partfixed meaning u is fixed on the bottom boundary while neumann meaning only the force boundary condition and m1 means the radially symmtric cell shape while m0 means the lamellipodium cell shape.
+The resulting files will be named accordingly, e.g. for the 'reduced model', the simululation results are named 
+> rhomodel_`twoDstim`_`var`_reduced_dt=`dt`_T=`T`_D=`D1`_`E`E.pvd
+
+where `var` is the variable $\phi_d$ if it states `cd`, $\phi_a$ if `ca` and $\rho_a$ if `p`; and for the coupled model simulations, the results are named
+> coupled_`coupling`_2D_`var`_`bcs`_m`m`_dt=`dt`_T=`T`_k6=1.0_`E`E.pvd
+
+where `var` is the variable $\phi_d$ if it states `cd`, $\phi_a$ if `ca`, $\rho_a$ if `p` and $u$ if `u`, 2D means 2xD stimulus and if this is left out it means 3D stimulus was used, `bcs` can either be `partfixed` meaning a rigid substrate or `neumann` meaning only the force boundary condition holds, and `m` determines the shape of the cell with 1-> radially symmtric cell shape, 0 -> lamellipodium cell shape, and 2-> radially symmetric cell with nucleus.
 
 
 ## Relate Results to Figures
