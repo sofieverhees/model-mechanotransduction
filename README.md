@@ -32,8 +32,16 @@ This code is organised in three different folders:
 - 'signalling_model': includes all files needed to get results for the 'reduced model' without mechanics, as given in Appendix A.1.
 - 'coupled_model': includes all files needed to get results for the model with bidirectional coupling between the chemistry and the mechanics.
 
+Both '_model' folders include:
+- 'loop.sh':
+- 'main.py':
+- 'summary_graphs.py':
 
-## Relate Code with Figures
+For the coupled model, there is one extra file:
+- 'tempstats.py':
+
+
+## Relate Code to Figures
 If the files are run as instructed, a folder 'results' will be created including the following subfolders
 - 'simulations': includes simulation results (.vtu and .pvd), which are visualised with [Paraview](https://www.paraview.org/) 5.10.0-RC1 and correspond to Figures 1-4, 6-9, 11-14 & 16-19, and Figures 27 & 28 in Appendix A.5.
 - 'temp': includes saved numpy arrays (.npy) with the discrete time derivative, L2-norm, minumum and maximum values of phi_a, phi_d, rho_a and u as well as other variables saved at each time step.
