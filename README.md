@@ -12,7 +12,7 @@ Create an anaconda environment with
 - conda-build 3.24.0
 - Python 3.10.9.final.0
 
-Using 'conda install -c conda-forge fenics', install
+Then, you can use 'conda-forge' to install
 - fenics-dolfin 2019.1.0
 - fenics-ufl 2019.1.0
 
