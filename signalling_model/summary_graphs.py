@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from extra_functions import plot
 from matplotlib import rcParams
 import numpy as np
 import pyvista as pv
