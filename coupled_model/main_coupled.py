@@ -19,6 +19,7 @@ parser.add_argument("-partfixed", type=str, required=True)
 args = parser.parse_args()
 print(args)
 
+# define parameters as given above
 T = args.T
 dt = args.dt
 bigE = args.bigE
@@ -57,15 +58,14 @@ else:
 # Define strain and stress
 def epsilon(u):
     return 0.5*(nabla_grad(u) + nabla_grad(u).T)
-    #return sym(nabla_grad(u))
 
 def sigma(u):
     return lambda_*nabla_div(u)*Identity(di) + 2*mu*epsilon(u)
 
 # Create meshes from gmsh files
-if mesh_name == 'cell_substrate':
+if mesh_name == 'cell_substrate': # radially symmetric shape
     meshnr = 1
-else:
+else: # lamellipdoium shape
     meshnr = 0
 mesh = Mesh() #define mesh
 
@@ -76,13 +76,11 @@ with XDMFFile('../mesh/'+mesh_name+'.xdmf') as xdmf:
     xdmf.read(mesh) #write xdmf file to mesh
 File('../mesh/'+mesh_name+'.pvd').write(mesh) #save mesh to new pvd 
 
-#for loop over each mesh refinement
-surface = BoundaryMesh(mesh, 'exterior') #find surface mesh
+#find surface mesh
+surface = BoundaryMesh(mesh, 'exterior') 
 
 # Defining relationship between vertices of the two meshes
 vs_2_vb = surface.entity_map(0)
-#vb_2_v.vector()[j] is the number of vertex on
-#domain_mesh, where j is the corresponding vertex on surface mesh
 
 # Build function space with Lagrange multiplier
 P0 = FiniteElement("Lagrange", mesh.ufl_cell(), 1)    
@@ -115,19 +113,17 @@ area1 = Constant('1')
 area = interpolate(area1, S)
 ar = assemble(area*dx)
 
-#define nr
+#define nr and other constants dependent on nr
 nr = vl/ar
 k2 = nr*0.15
-#k5 = nr*0.067 
 k5 = nr*0.168
+
+# define boundary function that specifices the bottom of the cell
 def Boundary(x, on_boundary):
     return on_boundary and near(x[2],0) #(-0.99 > x[0] > -1. or 1. > x[0] > 0.99) #((abs(x[0] - 0.9) < DOLFIN_EPS) or (abs(x[0] + 0.9) < DOLFIN_EPS)) #near(x[0],1) #(x[0] < -0.9 or x[0] > 0.9)  #near(x[0], 0)
 
-
 if twoDstim == 'yes':
-    #make bigE a function for 2D stimulus
-    # boundary conditions for linear elasticity:
-    
+    #make bigE a function for 2D stimulus    
     bcs = DirichletBC(W, Constant(bigE), Boundary)
     E2D = Function(W)
     bcs.apply(E2D.vector())
@@ -193,7 +189,7 @@ u1 = Function(P)
 
 Ec1.interpolate(Expression('2*(pow(ca1,2.6)+0.1)', ca1 = ca1, degree=3))
 Ec = Constant(0.6)
-#define lame parametersx
+#define lame parameters
 if coupling == 3 or coupling == 4:
     mu = Ec1/(2*(1+nu_))
     lambda_ = Ec1*nu_/((1+nu_)*(1-2*nu_))
@@ -201,9 +197,11 @@ else:
     mu = Ec/(2*(1+nu_))
     lambda_ = Ec*nu_/((1+nu_)*(1-2*nu_))
 
+# define initial problem for linear elasticity
 a = inner(sigma(u), epsilon(v))*dx + (dot(l1,v) + dot(u,d1)+ dot(l2*xe1,v)+ dot(l3*xe2,v)+ dot(l4*xe3,v) + dot(u,d2*xe1) + dot(u,d3*xe2) + dot(u,d4*xe3))*dx
 L = k6*dot(bulk_pa1*nu, v)*ds
 
+# solve initial problem for liner elasticity with or without boundary conditions
 if partfixed == 'yes':
     solve(a == L, w1,bcs=bc, solver_parameters={'linear_solver':'mumps'})
 else:
@@ -211,37 +209,37 @@ else:
 
 fa.assign([u1,Function(Z1),Function(Z2),Function(Z3),Function(Z4)],w1) 
 
-# Output file
+# Output files that create Figures 1-4, 6-9, 11-14, and 16-19
 if partfixed == 'yes':
     if twoDstim == 'yes':
-        file_cd = File("../../../new_results/simulations/coupled"+str(coupling)+"_2D_cd_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
-        file_ca = File("../../../new_results/simulations/coupled"+str(coupling)+"_2D_ca_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
-        file_pa = File("../../../new_results/simulations/coupled"+str(coupling)+"_2D_p_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
-        file_u = File("../../../new_results/simulations/coupled"+str(coupling)+"_2D_u_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
-        file_ec = File("../../../new_results/simulations/coupled"+str(coupling)+"_2D_ec_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
-        file_dtu_div = File("../../../new_results/simulations/coupled"+str(coupling)+"_2D_dtudiv_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
+        file_cd = File("../results/simulations/coupled"+str(coupling)+"_2D_cd_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
+        file_ca = File("../results/simulations/coupled"+str(coupling)+"_2D_ca_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
+        file_pa = File("../results/simulations/coupled"+str(coupling)+"_2D_p_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
+        file_u = File("../results/simulations/coupled"+str(coupling)+"_2D_u_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
+        file_ec = File("../results/simulations/coupled"+str(coupling)+"_2D_ec_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
+        file_dtu_div = File("../results/simulations/coupled"+str(coupling)+"_2D_dtudiv_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
     else:
-        file_cd = File("../../../new_results/simulations/coupled"+str(coupling)+"_cd_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
-        file_ca = File("../../../new_results/simulations/coupled"+str(coupling)+"_ca_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
-        file_pa = File("../../../new_results/simulations/coupled"+str(coupling)+"_p_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
-        file_u = File("../../../new_results/simulations/coupled"+str(coupling)+"_u_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
-        file_ec = File("../../../new_results/simulations/coupled"+str(coupling)+"_ec_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
-        file_dtu_div = File("../../../new_results/simulations/coupled"+str(coupling)+"_dtudiv_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
+        file_cd = File("../results/simulations/coupled"+str(coupling)+"_cd_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
+        file_ca = File("../results/simulations/coupled"+str(coupling)+"_ca_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
+        file_pa = File("../results/simulations/coupled"+str(coupling)+"_p_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
+        file_u = File("../results/simulations/coupled"+str(coupling)+"_u_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
+        file_ec = File("../results/simulations/coupled"+str(coupling)+"_ec_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
+        file_dtu_div = File("../results/simulations/coupled"+str(coupling)+"_dtudiv_partfixed_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
 else:       
     if twoDstim == 'yes':
-        file_cd = File("../../../new_results/simulations/coupled"+str(coupling)+"_2D_cd_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
-        file_ca = File("../../../new_results/simulations/coupled"+str(coupling)+"_2D_ca_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
-        file_pa = File("../../../new_results/simulations/coupled"+str(coupling)+"_2D_p_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
-        file_u = File("../../../new_results/simulations/coupled"+str(coupling)+"_2D_u_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
-        file_ec = File("../../../new_results/simulations/coupled"+str(coupling)+"_2D_ec_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
-        file_dtu_div = File("../../../new_results/simulations/coupled"+str(coupling)+"_2D_dtudiv_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
+        file_cd = File("../results/simulations/coupled"+str(coupling)+"_2D_cd_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
+        file_ca = File("../results/simulations/coupled"+str(coupling)+"_2D_ca_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
+        file_pa = File("../results/simulations/coupled"+str(coupling)+"_2D_p_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
+        file_u = File("../results/simulations/coupled"+str(coupling)+"_2D_u_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
+        file_ec = File("../results/simulations/coupled"+str(coupling)+"_2D_ec_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
+        file_dtu_div = File("../results/simulations/coupled"+str(coupling)+"_2D_dtudiv_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
     else:
-        file_cd = File("../../../new_results/simulations/coupled"+str(coupling)+"_cd_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
-        file_ca = File("../../../new_results/simulations/coupled"+str(coupling)+"_ca_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
-        file_pa = File("../../../new_results/simulations/coupled"+str(coupling)+"_p_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
-        file_u = File("../../../new_results/simulations/coupled"+str(coupling)+"_u_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
-        file_ec = File("../../../new_results/simulations/coupled"+str(coupling)+"_ec_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
-        file_dtu_div = File("../../../new_results/simulations/coupled"+str(coupling)+"_dtudiv_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
+        file_cd = File("../results/simulations/coupled"+str(coupling)+"_cd_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
+        file_ca = File("../results/simulations/coupled"+str(coupling)+"_ca_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
+        file_pa = File("../results/simulations/coupled"+str(coupling)+"_p_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", "compressed")
+        file_u = File("../results/simulations/coupled"+str(coupling)+"_u_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
+        file_ec = File("../results/simulations/coupled"+str(coupling)+"_ec_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
+        file_dtu_div = File("../results/simulations/coupled"+str(coupling)+"_dtudiv_neumann_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+str_C1+"_"+str(bigE)+"E.pvd", 'compressed')
                 
 # initialize functions
 cd_new = Function(W)
@@ -395,29 +393,30 @@ for n in range(0,N):
 
     t += dt
 
+# save numy arrays with variables for each time step to create other plots
 if partfixed == 'yes':
     if twoDstim == 'yes':
-        np.save('../../../new_results/temp/tempstats'+str(coupling)+'_partfixed_2D-der-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_der_stats)
-        np.save('../../../new_results/temp/tempstats'+str(coupling)+'_partfixed_2D-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats)
-        np.save('../../../new_results/temp/tempstats'+str(coupling)+'_partfixed_2D-minmax-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats_minmax)
-        np.save('../../../new_results/temp/tempstats'+str(coupling)+'_partfixed_2D-oth-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', variables)
+        np.save('../results/temp/tempstats'+str(coupling)+'_partfixed_2D-der-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_der_stats)
+        np.save('../results/temp/tempstats'+str(coupling)+'_partfixed_2D-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats)
+        np.save('../results/temp/tempstats'+str(coupling)+'_partfixed_2D-minmax-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats_minmax)
+        np.save('../results/temp/tempstats'+str(coupling)+'_partfixed_2D-oth-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', variables)
         plot2D(coupling, meshnr, dt, T, k6, bigE, str_C1, '_partfixed')
     else:
-        np.save('../../../new_results/temp/tempstats'+str(coupling)+'_partfixed-der-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_der_stats)
-        np.save('../../../new_results/temp/tempstats'+str(coupling)+'_partfixed-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats)
-        np.save('../../../new_results/temp/tempstats'+str(coupling)+'_partfixed-minmax-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats_minmax)
-        np.save('../../../new_results/temp/tempstats'+str(coupling)+'_partfixed-oth-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', variables)
+        np.save('../results/temp/tempstats'+str(coupling)+'_partfixed-der-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_der_stats)
+        np.save('../results/temp/tempstats'+str(coupling)+'_partfixed-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats)
+        np.save('../results/temp/tempstats'+str(coupling)+'_partfixed-minmax-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats_minmax)
+        np.save('../results/temp/tempstats'+str(coupling)+'_partfixed-oth-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', variables)
         plot(coupling, meshnr, dt, T, k6, bigE, str_C1, '_partfixed')
 else:
     if twoDstim == 'yes':
-        np.save('../../../new_results/temp/tempstats'+str(coupling)+'_2D-der-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_der_stats)
-        np.save('../../../new_results/temp/tempstats'+str(coupling)+'_2D-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats)
-        np.save('../../../new_results/temp/tempstats'+str(coupling)+'_2D-minmax-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats_minmax)
-        np.save('../../../new_results/temp/tempstats'+str(coupling)+'_2D-oth-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', variables)
+        np.save('../results/temp/tempstats'+str(coupling)+'_2D-der-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_der_stats)
+        np.save('../results/temp/tempstats'+str(coupling)+'_2D-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats)
+        np.save('../results/temp/tempstats'+str(coupling)+'_2D-minmax-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats_minmax)
+        np.save('../results/temp/tempstats'+str(coupling)+'_2D-oth-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', variables)
         plot2D(coupling, meshnr, dt, T, k6, bigE, str_C1, '')
     else:
-        np.save('../../../new_results/temp/tempstats'+str(coupling)+'-der-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_der_stats)
-        np.save('../../../new_results/temp/tempstats'+str(coupling)+'-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats)
-        np.save('../../../new_results/temp/tempstats'+str(coupling)+'-minmax-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats_minmax)
-        np.save('../../../new_results/temp/tempstats'+str(coupling)+'-oth-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', variables)
+        np.save('../results/temp/tempstats'+str(coupling)+'-der-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_der_stats)
+        np.save('../results/temp/tempstats'+str(coupling)+'-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats)
+        np.save('../results/temp/tempstats'+str(coupling)+'-minmax-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats_minmax)
+        np.save('../results/temp/tempstats'+str(coupling)+'-oth-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', variables)
         plot(coupling, meshnr, dt, T, k6, bigE, str_C1, '')
