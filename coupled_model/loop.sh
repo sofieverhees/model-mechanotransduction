@@ -1,8 +1,8 @@
 #!/bin/bash
 # run different versions of the coupled model 
 
-T = 10
-dt = 0.05
+T=10
+dt=0.05
 
 for mesh_name in 'cell_substrate' 'lamellipodium' #'cell_substrate_empty-nucleus' 
 do
