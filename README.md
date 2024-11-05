@@ -33,15 +33,18 @@ This code is organised in three different folders:
 - 'coupled_model': includes all files needed to recreate any results for the model with bidirectional coupling between the chemistry and the mechanics.
 
 Both '_model' folders include:
-- 'loop.sh': 
-- 'main.py':
-- 'summary_graphs.py':
+- 'loop.sh': bash file running 'main.py' for different parameters and versions of the model.
+- 'main.py': creates simulations of the model, includes all main code.
+- 'summary_graphs.py': given the saved data from 'main.py', creates graphs that plot $f(\phi_a)$, $div(u)$, $\phi_a$ and $\rho_a$ as a function of the susbstrat stiffness $E$, as can be found in Figures 5, 10, 15 & 20 (for the coupled model), and Figures 22 & 24 in Appendix A.1 (for the 'reduced model' without mechanics).
 
 For the coupled model, there is one extra file:
-- 'tempstats.py': 
+- 'tempstats.py': given the saved data from 'main.py', creates graphs that plot $f(\phi_a)$, $div(u)$, $\phi_a$ and $\rho_a$ as a function of time, as can be found in Figure 25 in Appendix A.2.
 
 > [!WARNING]
 > Files 'summary_graphs.py' and 'tempstats.py' should only be run after running the corresponding 'loop.sh' as it requires the output from this programme.
+
+### Different parameters/ versions
+...
 
 ## Relate Results to Figures
 If the files are run as instructed, a folder 'results' will be created including the following subfolders
