@@ -43,7 +43,7 @@ For the coupled model, there is one extra file:
 > [!WARNING]
 > Files 'summary_graphs.py' and 'tempstats.py' should only be run after running the corresponding 'loop.sh' as it requires the output from this programme.
 
-## Relate Code to Figures
+## Relate Results to Figures
 If the files are run as instructed, a folder 'results' will be created including the following subfolders
 - 'simulations': includes simulation results (.vtu and .pvd), which are visualised with [Paraview](https://www.paraview.org/) 5.10.0-RC1 and correspond to Figures 1-4, 6-9, 11-14 & 16-19, and Figures 27 & 28 in Appendix A.5.
 - 'temp': includes saved numpy arrays (.npy) with the discrete time derivative, L2-norm, minumum and maximum values of $\phi_a$, $\phi_d$, $\rho_a$ and $u$ as well as other variables saved at each time step.
