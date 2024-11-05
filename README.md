@@ -9,7 +9,7 @@ We derive and analyse a mathematical model for mechanotransduction related to th
 
 
 ## Prerequisite Packages
-Create a [conda](https://docs.conda.io/en/latest/) environment with
+A [conda](https://docs.conda.io/en/latest/) environment is ceated with
 - conda 23.3.1
 - conda-build 3.24.0
 - Python 3.10.9.final.0
@@ -28,18 +28,20 @@ Additionally, the next packages have to be installed (e.g. with pip)
 
 ## Code Structure
 This code is organised in three different folders:
-- 'meshes': includes mesh files (.geo and .msh), created with [gmsh](https://gmsh.info/) 4.11.1, for different cell shapes. These files should not be touched.
-- 'signalling_model': includes all files needed to get results for the 'reduced model' without mechanics, as given in Appendix A.1.
-- 'coupled_model': includes all files needed to get results for the model with bidirectional coupling between the chemistry and the mechanics.
+- 'meshes': includes mesh files (.geo and .msh), created with [gmsh](https://gmsh.info/) 4.11.1, for different cell shapes. These files should not be touched to recreate any results.
+- 'signalling_model': includes all files needed to recreate results for the 'reduced model' without mechanics, as given in Appendix A.1.
+- 'coupled_model': includes all files needed to recreate any results for the model with bidirectional coupling between the chemistry and the mechanics.
 
 Both '_model' folders include:
-- 'loop.sh':
+- 'loop.sh': 
 - 'main.py':
 - 'summary_graphs.py':
 
 For the coupled model, there is one extra file:
-- 'tempstats.py':
+- 'tempstats.py': 
 
+> [!WARNING]
+> Files 'summary_graphs.py' and 'tempstats.py' should only be run after running the corresponding 'loop.sh' as it requires the output from this programme.
 
 ## Relate Code to Figures
 If the files are run as instructed, a folder 'results' will be created including the following subfolders
