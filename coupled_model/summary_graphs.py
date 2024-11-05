@@ -3,6 +3,7 @@ from matplotlib import rcParams
 import numpy as np
 import pyvista as pv
 
+# define colours
 myblue = (0,119/235,187/235)
 myred=(187/235,85/235,102/235)
 myyellow=(221/235,170/235,51/235)
@@ -11,14 +12,13 @@ mygreen="#66BB55"
 mymagenta="#7733DD"
 myblack="#48494B"
 
+# define text size
 axes_labels = 25
 axes_ticks = 20
 legend_labels = 20
-#rcParams.update({'figure.autolayout': True})
 rcParams['font.size'] = 20
-#rcParams['xtick.labelbottom'] = False
-#rcParams['ytick.labelleft'] = False
 
+# define parameters
 dt = 0.05
 T = 10
 k6 = 1
@@ -26,15 +26,20 @@ Es = np.array([0.001, 0.01, 0.1, 0.3, 1, 5.7, 10, 50, 100, 7000000])
 n = len(Es)
 order = np.array([0, 2, 4, 6, 1, 5, 3, 7])
 
-
+# loop for different boundary conditions for linear elasticity (partfixed = no deformation in the z-direction at the bottom of the cell)
 for bcs in ['_partfixed','_neumann']:
+    
+    # for loop for different stimuli (2D and 3D)
     for stim in ['_2D','']:
-
+        
+        # create Figures 5, 10, 15, and 20
         fig, axs = plt.subplots(4,4, sharex=True, sharey='row', figsize=(24,16), layout='constrained')
         k = 0
         
+        # for loop for different cell shapes (1 = radially symmetric, 0 = lamellidpodium)
         for meshnr in [1,0]:
 
+            # create empty arrays to save variables
             Ec = np.zeros((8,n))
             Ec_min = np.zeros((8,n))
             Ec_max = np.zeros((8,n))
@@ -49,12 +54,16 @@ for bcs in ['_partfixed','_neumann']:
             pa_max = np.zeros((8,n))
 
             j = 0
-            
+
+            # for loop for different couplings (1-> Ec=0.6, C1=0; 2-> Ec=0.6, C1=1; 3-> Ec=f(phi), C1=0; 4-> Ec=f(phi), C1=1)
             for coupling in [1,2,3,4]:
                 i = 0
+
+                # for loop for different substrate stiffnesses E
                 for bigE in Es:
                     #print('STATE:', bcs, stim, meshnr, coupling, bigE)
 
+                    # read from files saved from simulations and find mean of phi_a, rho_a, div(u) and Ec/f(phi) to plot
                     file_ca = pv.read("../../../new_results/simulations/coupled"+str(coupling)+str(stim)+"_ca"+str(bcs)+"_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+"_"+str(bigE)+"E000199.vtu")
                     cell_ca = file_ca.point_data_to_cell_data()
                     ca_values = cell_ca.get_array(cell_ca.array_names[0])
@@ -121,12 +130,14 @@ for bcs in ['_partfixed','_neumann']:
                 
                 j += 1
 
+            # for loop to add extra values of C1=0.5, 2
             for C1 in [0.5,2.0]:
                 for coupling in [2,4]:
                     i = 0
                     for bigE in Es:
                         #print('STATE:', bcs, stim, meshnr, coupling, bigE)
 
+                        # read from files saved from simulations and find mean of phi_a, rho_a, div(u) and Ec/f(phi) to plot
                         file_ca = pv.read("../../../new_results/simulations/coupled"+str(coupling)+str(stim)+"_ca"+str(bcs)+"_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+'_C1='+str(C1)+"_"+str(bigE)+"E000199.vtu")
                         cell_ca = file_ca.point_data_to_cell_data()
                         ca_values = cell_ca.get_array(cell_ca.array_names[0])
@@ -193,12 +204,13 @@ for bcs in ['_partfixed','_neumann']:
                     
                     j += 1
 
+            #creat error bars from mean and min/max values
             Ec_err = np.array([Ec - Ec_min, Ec_max - Ec])    
             u_div_err = np.array([u_div_l2 - u_div_min, u_div_max - u_div_l2])
             ca_err = np.array([ca - ca_min, ca_max - ca])
             pa_err = np.array([pa - pa_min, pa_max - pa])
 
-            
+            # plot everything
             axs[0,k].set_xscale('log')
             axs[0,k].set_ylim(0, 2.5)
             axs[0,k].set_xlabel('$E$ (kPa)', fontsize=axes_labels)
@@ -284,16 +296,11 @@ for bcs in ['_partfixed','_neumann']:
         for ax in fig.get_axes():
             ax.label_outer()
         
-        #plt.legend(bbox_to_anchor=(1, 0), loc="lower right",bbox_transform=fig.transFigure, ncol=3)
-        #plt.legend(bbox_to_anchor=(1.04, 0.5), loc="center left", borderaxespad=0)
-        #fig.legend(loc='outside lower center')
+        #create legend with preferred layout
         handles, labels = plt.gca().get_legend_handles_labels()
         by_label = dict(zip(labels, handles))
-        #fig.legend(by_label.values(), by_label.keys(), loc='outside lower center', ncol = len(ax.lines))
         fig.legend(by_label.values(), by_label.keys(), bbox_to_anchor=(0.5, -0.05), loc="lower center", ncol = len(ax.lines))
-        #fig.legend(by_label.values(), by_label.keys(), loc='outside center right')
-        #fig.tight_layout()
         
         plt.savefig('../../../new_results/figures/AllGraphsMean'+str(bcs)+str(stim)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+'.png',bbox_inches='tight')
-        plt.show()
-        #plt.close()
+        #plt.show()
+        plt.close()
