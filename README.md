@@ -35,7 +35,7 @@ This code is organised in three different folders:
 Both '_model' folders include:
 - 'loop.sh': bash file running 'main.py' for different parameters and versions of the model.
 - 'main.py': creates simulations of the model, includes all main code.
-- 'summary_graphs.py': given the saved data from 'main.py', creates graphs that plot $f(\phi_a)$, $div(u)$, $\phi_a$ and $\rho_a$ as a function of the susbstrat stiffness $E$, as can be found in Figures 5, 10, 15 & 20 (for the coupled model), and Figures 22 & 24 in Appendix A.1 (for the 'reduced model' without mechanics).
+- 'summary_graphs.py': given the saved data from 'main.py', creates graphs that plot $f(\phi_a)$, $div(u)$, $\phi_a$ and $\rho_a$ as a function of the susbstrate stiffness $E$, as can be found in Figures 5, 10, 15 & 20 (for the coupled model), and Figures 22 & 24 in Appendix A.1 (for the 'reduced model' without mechanics).
 
 For the coupled model, there is one extra file:
 - 'tempstats.py': given the saved data from 'main.py', creates graphs that plot $f(\phi_a)$, $div(u)$, $\phi_a$ and $\rho_a$ as a function of time, as can be found in Figure 25 in Appendix A.2.
@@ -44,7 +44,23 @@ For the coupled model, there is one extra file:
 > Files 'summary_graphs.py' and 'tempstats.py' should only be run after running the corresponding 'loop.sh' as it requires the output from this programme.
 
 ### Different parameters/ versions
-...
+'loop.sh' contains different variables that determine which version of the model with which parameters is run.
+- For 'signalling_model' without mechanics, the variables are:
+  - 'D1': determines the diffusion coefficient of $\phi_d$ and $\phi_a$ (in x0.1$\mu$m<\sup>2<\sup>/s)
+  - 'twoDstim': determines the kind of stimulus (2D, 2xD, 3D), as explained in the paper.
+  - 'E': determines the substrate stiffness
+- For the coupled model, the variables are:
+  - 'T': gives the final time (in x10s).
+  - 'dt': gives the time step (in x10s).
+  - 'mesh_name': determines the shape of the cell, 'cell_substrate' being the radially symmetric cell, 'lamellipodium' the lamellipodium shape, and 'cell_substrate_empty-nucleus' the radially symmetric cell with a nucleus.
+  - 'coupling': determines which coupling between the mechanics and the chemistry, where 1 -> $E_c=0.6$ & $C_1 = 0; 2 -> $E_c=0.6$ & $C_1 = 1; 3-> $E_c=f(\phi_a)$ & $C_1 = 0; 4 -> $E_c=f(\phi_a)$ & $C_1 = 1.
+  - 'C1': determines the value of $C_1$
+  - 'E': determines the substrate stiffness
+  - 'twoDstim': determines where the substrate stiffness has effect with 'yes' meaning only on the bottom boundary (2xD stimulus) and 'no' meaning everywhere on the boundary (3D stimulus).
+  - 'partfixed': determines which boundary condition is put on u with 'yes' meaning no deformation in the vertical direction on the bottom of the cell (rigid substrate) and 'no' meaning only the force boundary condition.
+
+The resulting files will be named accordingly, e.g. for the 'reduced model' simululation results are named 'rhomodel_ _twoDstim_ _ _var_ _reduced_dt= _dt_ _T= _T_ _D= _D1_ _E_ E.pvd', where var is the variable $\phi_d$ for cd, $\phi_a$ for ca and $\rho_a$ for p; and for the coupled model simulations results are named 'coupled _coupling_ 2D_var_(partfixed/neumann)_m(0/1)_dt=.._T=.._k6=.._..E.pvd', where var is the variable \phi_d for cd, \phi_a for ca and \rho_a for p and coupling(1/2/3/4) determines the coupling between the mechanics and the chemistry as described before and if 2D is not there, it is the 3D stimulus and partfixed meaning u is fixed on the bottom boundary while neumann meaning only the force boundary condition and m1 means the radially symmtric cell shape while m0 means the lamellipodium cell shape
+
 
 ## Relate Results to Figures
 If the files are run as instructed, a folder 'results' will be created including the following subfolders
