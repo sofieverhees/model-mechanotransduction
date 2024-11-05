@@ -2,7 +2,6 @@ from dolfin import *
 import meshio
 import numpy as np
 from ufl import nabla_div, transpose, Max
-from extra_functions import plot, plot2D
 import argparse
 
 # Make sure model parameters can be decided when running:
@@ -443,23 +442,19 @@ if partfixed == 'yes':
         np.save('../results/temp/tempstats'+str(coupling)+'_partfixed_2D-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats)
         np.save('../results/temp/tempstats'+str(coupling)+'_partfixed_2D-minmax-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats_minmax)
         np.save('../results/temp/tempstats'+str(coupling)+'_partfixed_2D-oth-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', variables)
-        plot2D(coupling, meshnr, dt, T, k6, bigE, str_C1, '_partfixed')
     else:
         np.save('../results/temp/tempstats'+str(coupling)+'_partfixed-der-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_der_stats)
         np.save('../results/temp/tempstats'+str(coupling)+'_partfixed-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats)
         np.save('../results/temp/tempstats'+str(coupling)+'_partfixed-minmax-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats_minmax)
         np.save('../results/temp/tempstats'+str(coupling)+'_partfixed-oth-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', variables)
-        plot(coupling, meshnr, dt, T, k6, bigE, str_C1, '_partfixed')
 else:
     if twoDstim == 'yes':
         np.save('../results/temp/tempstats'+str(coupling)+'_2D-der-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_der_stats)
         np.save('../results/temp/tempstats'+str(coupling)+'_2D-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats)
         np.save('../results/temp/tempstats'+str(coupling)+'_2D-minmax-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats_minmax)
         np.save('../results/temp/tempstats'+str(coupling)+'_2D-oth-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', variables)
-        plot2D(coupling, meshnr, dt, T, k6, bigE, str_C1, '')
     else:
         np.save('../results/temp/tempstats'+str(coupling)+'-der-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_der_stats)
         np.save('../results/temp/tempstats'+str(coupling)+'-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats)
         np.save('../results/temp/tempstats'+str(coupling)+'-minmax-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', temp_stats_minmax)
         np.save('../results/temp/tempstats'+str(coupling)+'-oth-m'+str(meshnr)+'_dt='+str(dt)+'_T='+str(T)+'_k6='+str(k6)+str_C1+'_'+str(bigE)+'E', variables)
-        plot(coupling, meshnr, dt, T, k6, bigE, str_C1, '')
