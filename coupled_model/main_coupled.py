@@ -65,19 +65,46 @@ def sigma(u):
 # Create meshes from gmsh files
 if mesh_name == 'cell_substrate': # radially symmetric shape
     meshnr = 1
-else: # lamellipdoium shape
+elif mesh_name == 'cell_substrate_empty-nucleus': # radially symmetric shape with nucleus
+    meshnr = 2
+    omega = 1
+elif mesh_name == 'lamellipodium': # lamellipdoium shape
     meshnr = 0
 mesh = Mesh() #define mesh
 
-msh = meshio.read('../mesh/'+mesh_name+'.msh') #read msh file
-meshio.write('../mesh/'+mesh_name+'.xdmf', meshio.Mesh(points=msh.points, cells={"tetra": msh.cells_dict["tetra"]})) #convert to xdmf file
+msh = meshio.read('../meshes/'+mesh_name+'.msh') #read msh file
+meshio.write('../meshes/'+mesh_name+'.xdmf', meshio.Mesh(points=msh.points, cells={"tetra": msh.cells_dict["tetra"]})) #convert to xdmf file
 
-with XDMFFile('../mesh/'+mesh_name+'.xdmf') as xdmf: 
+with XDMFFile('../meshes/'+mesh_name+'.xdmf') as xdmf: 
     xdmf.read(mesh) #write xdmf file to mesh
-File('../mesh/'+mesh_name+'.pvd').write(mesh) #save mesh to new pvd 
+File('../meshes/'+mesh_name+'.pvd').write(mesh) #save mesh to new pvd 
 
 #find surface mesh
 surface = BoundaryMesh(mesh, 'exterior') 
+
+# define nucleus boundary 
+if meshnr == 2:
+    #sub domains
+    class Nucleus(SubDomain):
+        def inside(self, x, on_boundary):
+            return -2.5-DOLFIN_EPS < x[0] < 2.5+DOLFIN_EPS and -2.5-DOLFIN_EPS < x[1] < 2.5+DOLFIN_EPS and 3-DOLFIN_EPS < x[2] < 7.01+DOLFIN_EPS and on_boundary
+    
+    class Nucleus_surface(SubDomain):
+        def inside(self, x, on_boundary):
+            return -2.5-DOLFIN_EPS < x[0] < 2.5+DOLFIN_EPS and -2.5-DOLFIN_EPS < x[1] < 2.5+DOLFIN_EPS and 3-DOLFIN_EPS < x[2] < 7.01+DOLFIN_EPS
+    
+    sub_boundaries = MeshFunction("size_t", mesh, mesh.topology().dim() - 1)
+    sub_domains = MeshFunction("size_t", surface, surface.topology().dim())
+    sub_boundaries.set_all(0)
+    sub_domains.set_all(0)
+    nucleus = Nucleus()
+    nucleus.mark(sub_boundaries, 1)
+    nucleus_surface = Nucleus_surface()
+    nucleus_surface.mark(sub_domains, 1)
+
+    ds = Measure('ds', domain=mesh, subdomain_data=sub_boundaries)
+    dS = Measure('dx', domain=surface, subdomain_data=sub_domains)
+    #dx = Measure('dx', domain=mesh, subdomain_data=sub_domains)
 
 # Defining relationship between vertices of the two meshes
 vs_2_vb = surface.entity_map(0)
@@ -171,6 +198,10 @@ ca1 = interpolate(ca0, W)
 pd0 = 1
 pa0 = Constant('0.06')
 pa1 = interpolate(pa0, S)
+# define rho_a to be zero at boundary of the nucleus
+if meshnr == 2:
+    nucleus_bc = DirichletBC(S, Constant(0), nucleus_surface)
+    nucleus_bc.apply(pa1.vector())
 
 u_bc = Constant(0)
 bc = DirichletBC(E.sub(0).sub(2), u_bc, Boundary)
@@ -198,8 +229,12 @@ else:
     lambda_ = Ec*nu_/((1+nu_)*(1-2*nu_))
 
 # define initial problem for linear elasticity
-a = inner(sigma(u), epsilon(v))*dx + (dot(l1,v) + dot(u,d1)+ dot(l2*xe1,v)+ dot(l3*xe2,v)+ dot(l4*xe3,v) + dot(u,d2*xe1) + dot(u,d3*xe2) + dot(u,d4*xe3))*dx
-L = k6*dot(bulk_pa1*nu, v)*ds
+if meshnr == 2:
+    a = inner(sigma(u), epsilon(v))*dx + omega*dot(u, v)*ds(1)
+    L = k6*dot(bulk_pa1*nu, v)*ds(0) 
+else:
+    a = inner(sigma(u), epsilon(v))*dx + (dot(l1,v) + dot(u,d1)+ dot(l2*xe1,v)+ dot(l3*xe2,v)+ dot(l4*xe3,v) + dot(u,d2*xe1) + dot(u,d3*xe2) + dot(u,d4*xe3))*dx
+    L = k6*dot(bulk_pa1*nu, v)*ds
 
 # solve initial problem for liner elasticity with or without boundary conditions
 if partfixed == 'yes':
@@ -280,7 +315,6 @@ for n in range(0,N):
         lambda_ = Ec*nu_/((1+nu_)*(1-2*nu_))
     
     # define the rhs of the linear elasticity equation
-    #a = inner(sigma(u), epsilon(v))*dx + (dot(l1,v) + dot(u,d1)+ dot(l2*xe1,v)+ dot(l3*xe2,v)+ dot(l4*xe3,v) + dot(u,d2*xe1) + dot(u,d3*xe2) + dot(u,d4*xe3))*dx
     L = k6*dot(bulk_pa1*nu, v)*ds
 
     # Compute solution
@@ -293,7 +327,10 @@ for n in range(0,N):
     fa.assign([u_new,Function(Z1),Function(Z2),Function(Z3),Function(Z4)],w_new)
 
     # Weak statement of both sides of activated c
-    a_cd = cd*vd*dx + dt*D1*inner(grad(cd), grad(vd))*dx + dt*(k2+k3)*cd*vd*ds + dt*k9*Max(tr(sigma(u_new)),0)*cd*vd*dx
+    if meshnr == 2:
+        a_cd = cd*vd*dx + dt*D1*inner(grad(cd), grad(vd))*dx + dt*(k2+k3)*cd*vd*ds(0) + dt*k9*Max(tr(sigma(u_new)),0)*cd*vd*dx
+    else:
+        a_cd = cd*vd*dx + dt*D1*inner(grad(cd), grad(vd))*dx + dt*(k2+k3)*cd*vd*ds + dt*k9*Max(tr(sigma(u_new)),0)*cd*vd*dx
     L_cd = cd1*vd*dx + dt*cf*k1*ca1*vd*dx
     
     A_cd = assemble(a_cd)
@@ -306,7 +343,10 @@ for n in range(0,N):
 
     # Weak statement of both sides of deactivated c
     a_ca = ca*va*dx + dt*D2*inner(grad(ca), grad(va))*dx + dt*k1*ca*va*dx
-    L_ca = ca1*va*dx + dt*(k2+k3)/cf*cd_new*va*ds + dt*k9*Max(tr(sigma(u_new)),0)*cd_new*va*dx
+    if meshnr == 2:
+        L_ca = ca1*va*dx + dt*(k2+k3)/cf*cd_new*va*ds(0) + dt*k9*Max(tr(sigma(u_new)),0)*cd_new*va*dx
+    else:
+        L_ca = ca1*va*dx + dt*(k2+k3)/cf*cd_new*va*ds + dt*k9*Max(tr(sigma(u_new)),0)*cd_new*va*dx
     
     A_ca = assemble(a_ca)
     b_ca = assemble(L_ca)
@@ -322,11 +362,14 @@ for n in range(0,N):
         surf_ca.vector()[v2d_S[i]] = ca_new.vector()[v2d_W[j]]
         
     # weak statement of rhs of pa
-    a_pa = pa*wa*dx + dt*D4*inner(grad(pa), grad(wa))*dx + dt*k4*pa*wa*dx + dt*k5/cr*(gamma*surf_ca*surf_ca*surf_ca*surf_ca*surf_ca+1)/nr*pa*wa*dx
-    A_pa = assemble(a_pa)
+    if meshnr == 2:
+        a_pa = pa*wa*dS + dt*D4*inner(grad(pa), grad(wa))*dS(0) + dt*k4*pa*wa*dS(0) + dt*k5/cr*(gamma*surf_ca*surf_ca*surf_ca*surf_ca*surf_ca+1)/nr*pa*wa*dS(0)
+        L_pa = pa1*wa*dS + dt*k5/cr*(gamma*surf_ca*surf_ca*surf_ca*surf_ca*surf_ca+1)*(pd0+pa0/nr)*wa*dS(0)
+    else:
+        a_pa = pa*wa*dx + dt*D4*inner(grad(pa), grad(wa))*dx + dt*k4*pa*wa*dx + dt*k5/cr*(gamma*surf_ca*surf_ca*surf_ca*surf_ca*surf_ca+1)/nr*pa*wa*dx
+        L_pa = pa1*wa*dx + dt*k5/cr*(gamma*surf_ca*surf_ca*surf_ca*surf_ca*surf_ca+1)*(pd0+pa0/nr)*wa*dx
     
-    # Weak statement of the rhs of p
-    L_pa = pa1*wa*dx + dt*k5/cr*(gamma*surf_ca*surf_ca*surf_ca*surf_ca*surf_ca+1)*(pd0+pa0/nr)*wa*dx
+    A_pa = assemble(a_pa)
     b_pa = assemble(L_pa)
 
     # now solve for p
