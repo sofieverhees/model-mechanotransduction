@@ -98,8 +98,8 @@ if twoDstim == '2D':
     dsx = Measure('dx', domain=surface, subdomain_data=sub_domains, metadata={'quadrature_degree': 3})
 
     # Save sub domains to file
-    file = File("../results/subdomains.pvd")
-    file << sub_domains
+    #file = File("../results/subdomains.pvd")
+    #file << sub_domains
     
 elif twoDstim == '2xD':
     #make bigE a function for 2xD stimulus
