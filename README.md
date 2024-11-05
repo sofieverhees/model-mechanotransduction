@@ -60,10 +60,10 @@ For the coupled model, there is one extra file:
   - `partfixed`: determines which boundary condition is put on u with `yes` meaning no deformation in the vertical direction on the bottom of the cell (rigid substrate) and `no` meaning only the force boundary condition.
 
 The resulting files will be named accordingly, e.g. for the 'reduced model', the simululation results are named 
-> rhomodel_`twoDstim`_`var`_reduced_dt=`dt`_T=`T`_D=`D1`_`E`E.pvd
+> rhomodel_`twoDstim`_`var`_reduced_dt=`dt`_T=`T`_D=`D1` _`E`E.pvd
 
 where `var` is the variable $\phi_d$ if it states `cd`, $\phi_a$ if `ca` and $\rho_a$ if `p`; and for the coupled model simulations, the results are named
-> coupled_`coupling`_`stim` _`var` _`bcs`_m`m`_dt=`dt`_T=`T`_k6=1.0_`E`E.pvd
+> coupled_`coupling`_`stim` _`var` _`bcs`_m`m`_dt=`dt`_T=`T`_k6=1.0 _`E`E.pvd
 
 where `var` is the variable $\phi_d$ if it states `cd`, $\phi_a$ if `ca`, $\rho_a$ if `p` and $u$ if `u`, `stim` is `2D` when there is 2xD stimulus and nothing if 3D stimulus was used, `bcs` can either be `partfixed` meaning a rigid substrate or `neumann` meaning only the force boundary condition holds, and `m` determines the shape of the cell with 1-> radially symmtric cell shape, 0 -> lamellipodium cell shape, and 2-> radially symmetric cell with nucleus.
 
