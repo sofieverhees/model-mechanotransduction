@@ -52,8 +52,8 @@ For the coupled model, there is one extra file:
 - For the coupled model, the variables are:
   - `T`: gives the final time (in x10s).
   - `dt`: gives the time step (in x10s).
-  - `mesh_name`: determines the shape of the cell, `cell_substrate` being the radially symmetric cell, `lamellipodium` the lamellipodium shape, and 'cell_substrate_empty-nucleus' the radially symmetric cell with a nucleus.
-  - `coupling`: determines which coupling between the mechanics and the chemistry, where 1 -> $E_c=0.6$ & $C_1 = 0$; 2 -> $E_c=0.6$ & $C_1 = 1$; 3-> $E_c=f(\phi_a)$ & $C_1 = 0$; 4 -> $E_c=f(\phi_a)$ & $C_1 = 1$.
+  - `mesh_name`: determines the shape of the cell, `cell_substrate` being the radially symmetric cell, `lamellipodium` the lamellipodium shape, and `cell_substrate_empty-nucleus` the radially symmetric cell with a nucleus.
+  - `coupling`: determines which coupling between the mechanics and the chemistry, where 1 --> $E_c=0.6$ & $C_1 = 0$; 2 --> $E_c=0.6$ & $C_1 = 1$; 3 --> $E_c=f(\phi_a)$ & $C_1 = 0$; 4 --> $E_c=f(\phi_a)$ & $C_1 = 1$.
   - `C1`: determines the value of $C_1$
   - `E`: determines the substrate stiffness
   - `twoDstim`: determines where the substrate stiffness has effect with `yes` meaning only on the bottom boundary (2xD stimulus) and `no` meaning everywhere on the boundary (3D stimulus).
@@ -73,6 +73,6 @@ The resulting files will be named according to the different parameters and vers
 where `var` is the variable $\phi_d$ if it states `cd`, $\phi_a$ if `ca` and $\rho_a$ if `p`; and for the coupled model simulations, the results are named
 > coupled_`coupling`_`stim` _`var` _`bcs`_m`m`_dt=`dt`_T=`T`_k6=1.0 _`E`E.pvd
 
-where `var` is the variable $\phi_d$ if it states `cd`, $\phi_a$ if `ca`, $\rho_a$ if `p` and $u$ if `u`, `stim` is `2D` when there is 2xD stimulus and nothing if 3D stimulus was used, `bcs` can either be `partfixed` meaning a rigid substrate or `neumann` meaning only the force boundary condition holds, and `m` determines the shape of the cell with 1-> radially symmtric cell shape, 0 -> lamellipodium cell shape, and 2-> radially symmetric cell with nucleus.
+where `var` is the variable $\phi_d$ if it states `cd`, $\phi_a$ if `ca`, $\rho_a$ if `p` and $u$ if `u`, `stim` is `2D` when there is 2xD stimulus and nothing if 3D stimulus was used, `bcs` can either be `partfixed` meaning a rigid substrate or `neumann` meaning only the force boundary condition holds, and `m` determines the shape of the cell with 1 --> radially symmtric cell shape, 0 --> lamellipodium cell shape, and 2 --> radially symmetric cell with nucleus.
 
 
