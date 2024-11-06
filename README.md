@@ -75,7 +75,8 @@ where `var` is the variable $\phi_d$ if it states `cd`, $\phi_a$ if `ca` and $\r
 where `var` is the variable $\phi_d$ if it states `cd`, $\phi_a$ if `ca`, $\rho_a$ if `p` and $u$ if `u`, `stim` is `2D` when there is 2xD stimulus and nothing if 3D stimulus was used, `bcs` can either be `partfixed` meaning a rigid substrate or `neumann` meaning only the force boundary condition holds, and `m` determines the shape of the cell with 1 --> radially symmtric cell shape, 0 --> lamellipodium cell shape, and 2 --> radially symmetric cell with nucleus.
 
 **Using this formatting, we have the following files corresponding to each different Figures:**
-where `coupling` means 1 --> $E_c=0.6$ & $C_1 = 0$; 2 --> $E_c=0.6$ & $C_1 = 1$; 3 --> $E_c=f(\phi_a)$ & $C_1 = 0$; 4 --> $E_c=f(\phi_a)$ & $C_1 = 1$,
+
+where `coupling` can be 1 --> $E_c=0.6$ & $C_1 = 0$; 2 --> $E_c=0.6$ & $C_1 = 1$; 3 --> $E_c=f(\phi_a)$ & $C_1 = 0$; 4 --> $E_c=f(\phi_a)$ & $C_1 = 1$,
 
 Figure 1: 
 - coupled`coupling`_2D_ca_partfixed_m1_dt=0.05_T=10_k6=1.0_0.1E.pvd
