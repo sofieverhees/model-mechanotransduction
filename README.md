@@ -67,7 +67,7 @@ If the files are run as instructed, a folder 'results' will be created including
 
 ### Different parameters/ versions
 The resulting files will be named according to the different parameters and version that can be chosen, e.g. for the 'reduced model', the simululation results are named 
-> rhomodel_`twoDstim`_`var`_reduced_dt=`dt`_T=`T`_D=`D1` _`E`E.pvd
+> rhomodel`twoDstim`_`var`_reduced_dt=`dt`_T=`T`_D=`D1` _`E`E.pvd
 
 where `var` is the variable $\phi_d$ if it states `cd`, $\phi_a$ if `ca` and $\rho_a$ if `p`; and for the coupled model simulations, the results are named
 > coupled`coupling`_`stim` _`var` _`bcs`_m`m`_dt=`dt`_T=`T`_k6=1.0 _`E`E.pvd
@@ -195,24 +195,24 @@ Figure 20:
 - AllGraphsMean_neumann_2D_dt=0.05_T=10_k6=1.png
 
 Figure 21, Appendix A.1 (where `twoDstim` is 2D, 2xD, or 3D corresponding to the stimulus):
-- rhomodel_`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_0.1E.pvd
-- rhomodel_`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_5.7E.pvd
-- rhomodel_`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_7000000.0E.pvd
-- rhomodel_`twoDstim`_p_reduced_dt=0.05_T=10_D=40_0.1E.pvd
-- rhomodel_`twoDstim`_p_reduced_dt=0.05_T=10_D=40_5.7E.pvd
-- rhomodel_`twoDstim`_p_reduced_dt=0.05_T=10_D=40_7000000.0E.pvd
+- rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_0.1E.pvd
+- rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_5.7E.pvd
+- rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_7000000.0E.pvd
+- rhomodel`twoDstim`_p_reduced_dt=0.05_T=10_D=40_0.1E.pvd
+- rhomodel`twoDstim`_p_reduced_dt=0.05_T=10_D=40_5.7E.pvd
+- rhomodel`twoDstim`_p_reduced_dt=0.05_T=10_D=40_7000000.0E.pvd
 
 Figure 22, Appendix A.1:
 - PhiTotvsEs0_allD-m1_dt=0.05_T=10_D=40.png
 - RhoAvsEs0_allD-m1_dt=0.05_T=10_D=40.png
 
 Figure 23, Appendix A.1 (where `twoDstim` is 2D, 2xD, or 3D corresponding to the stimulus):
-- rhomodel_`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_0.1E.pvd
-- rhomodel_`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_5.7E.pvd
-- rhomodel_`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_7000000.0E.pvd
-- rhomodel_`twoDstim`_p_reduced_dt=0.05_T=10_D=40_0.1E.pvd
-- rhomodel_`twoDstim`_p_reduced_dt=0.05_T=10_D=40_5.7E.pvd
-- rhomodel_`twoDstim`_p_reduced_dt=0.05_T=10_D=40_7000000.0E.pvd
+- rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_0.1E.pvd
+- rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_5.7E.pvd
+- rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_7000000.0E.pvd
+- rhomodel`twoDstim`_p_reduced_dt=0.05_T=10_D=40_0.1E.pvd
+- rhomodel`twoDstim`_p_reduced_dt=0.05_T=10_D=40_5.7E.pvd
+- rhomodel`twoDstim`_p_reduced_dt=0.05_T=10_D=40_7000000.0E.pvd
 
 Figure 24, Appendix A.1:
 - PhiTotvsEs0_allD-m1_dt=0.05_T=10_D=100.png
