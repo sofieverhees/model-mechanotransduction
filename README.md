@@ -59,7 +59,15 @@ For the coupled model, there is one extra file:
   - `twoDstim`: determines where the substrate stiffness has effect with `yes` meaning only on the bottom boundary (2xD stimulus) and `no` meaning everywhere on the boundary (3D stimulus).
   - `partfixed`: determines which boundary condition is put on u with `yes` meaning no deformation in the vertical direction on the bottom of the cell (rigid substrate) and `no` meaning only the force boundary condition.
 
-The resulting files will be named accordingly, e.g. for the 'reduced model', the simululation results are named 
+
+## Relate Results to Figures
+If the files are run as instructed, a folder 'results' will be created including the following subfolders
+- 'simulations': includes simulation results (.vtu and .pvd), which are visualised with [Paraview](https://www.paraview.org/) 5.10.0-RC1 and correspond to Figures 1-4, 6-9, 11-14 & 16-19, and Figures 27 & 28 in Appendix A.5.
+- 'temp': includes saved numpy arrays (.npy) with the discrete time derivative, L2-norm, minumum and maximum values of $\phi_a$, $\phi_d$, $\rho_a$ and $u$ as well as other variables saved at each time step.
+- 'figures': includes figures (.png) that correspond to Figures 5, 10, 15 & 20, Figures 22 & 24 in Appendix A.1, and Figure 25 in Appendix A.2.
+
+### Different parameters/ versions
+The resulting files will be named according to the different parameters and version that can be chosen, e.g. for the 'reduced model', the simululation results are named 
 > rhomodel_`twoDstim`_`var`_reduced_dt=`dt`_T=`T`_D=`D1` _`E`E.pvd
 
 where `var` is the variable $\phi_d$ if it states `cd`, $\phi_a$ if `ca` and $\rho_a$ if `p`; and for the coupled model simulations, the results are named
@@ -67,10 +75,4 @@ where `var` is the variable $\phi_d$ if it states `cd`, $\phi_a$ if `ca` and $\r
 
 where `var` is the variable $\phi_d$ if it states `cd`, $\phi_a$ if `ca`, $\rho_a$ if `p` and $u$ if `u`, `stim` is `2D` when there is 2xD stimulus and nothing if 3D stimulus was used, `bcs` can either be `partfixed` meaning a rigid substrate or `neumann` meaning only the force boundary condition holds, and `m` determines the shape of the cell with 1-> radially symmtric cell shape, 0 -> lamellipodium cell shape, and 2-> radially symmetric cell with nucleus.
 
-
-## Relate Results to Figures
-If the files are run as instructed, a folder 'results' will be created including the following subfolders
-- 'simulations': includes simulation results (.vtu and .pvd), which are visualised with [Paraview](https://www.paraview.org/) 5.10.0-RC1 and correspond to Figures 1-4, 6-9, 11-14 & 16-19, and Figures 27 & 28 in Appendix A.5.
-- 'temp': includes saved numpy arrays (.npy) with the discrete time derivative, L2-norm, minumum and maximum values of $\phi_a$, $\phi_d$, $\rho_a$ and $u$ as well as other variables saved at each time step.
-- 'figures': includes figures (.png) that correspond to Figures 5, 10, 15 & 20, Figures 22 & 24 in Appendix A.1, and Figure 25 in Appendix A.2.
 
