@@ -194,7 +194,8 @@ Figure 19:
 Figure 20:
 - AllGraphsMean_neumann_2D_dt=0.05_T=10_k6=1.png
 
-Supplement:
+Supplementary Material:
+
 Figure S1, Supplement S.1 (where `twoDstim` is 2D, 2xD, or 3D corresponding to the stimulus):
 - rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_0.1E.pvd
 - rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_5.7E.pvd
