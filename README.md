@@ -49,7 +49,7 @@ For the coupled model, there is one extra file:
   - `dt`: gives the time step (in x10s).
   - `E`: determines the substrate stiffness.
 - For 'signalling_model' without mechanics, the rest of the variables are:
-  - `D1`: determines the diffusion coefficient of $\phi_d$ and $\phi_a$ (in x0.1 $\mu$ m<\sup>2<\sup>/s)
+  - `D1`: determines the diffusion coefficient of $\phi_d$ and $\phi_a$ (in x0.1 $\mu$m<sup>2</sup>/s)
   - `twoDstim`: determines the kind of stimulus (2D, 2xD, 3D), as explained in the paper.
 - For the coupled model, the rest of the variables are:
   - `mesh_name`: determines the shape of the cell, `cell_substrate` being the radially symmetric cell, `lamellipodium` the lamellipodium shape, and `cell_substrate_empty-nucleus` the radially symmetric cell with a nucleus.
@@ -194,7 +194,8 @@ Figure 19:
 Figure 20:
 - AllGraphsMean_neumann_2D_dt=0.05_T=10_k6=1.png
 
-Figure 21, Appendix A.1 (where `twoDstim` is 2D, 2xD, or 3D corresponding to the stimulus):
+Supplement:
+Figure S1, Supplement S.1 (where `twoDstim` is 2D, 2xD, or 3D corresponding to the stimulus):
 - rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_0.1E.pvd
 - rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_5.7E.pvd
 - rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_7000000.0E.pvd
@@ -202,11 +203,11 @@ Figure 21, Appendix A.1 (where `twoDstim` is 2D, 2xD, or 3D corresponding to the
 - rhomodel`twoDstim`_p_reduced_dt=0.05_T=10_D=40_5.7E.pvd
 - rhomodel`twoDstim`_p_reduced_dt=0.05_T=10_D=40_7000000.0E.pvd
 
-Figure 22, Appendix A.1:
+Figure S2, Supplement S.1:
 - PhiTotvsEs0_allD-m1_dt=0.05_T=10_D=40.png
 - RhoAvsEs0_allD-m1_dt=0.05_T=10_D=40.png
 
-Figure 23, Appendix A.1 (where `twoDstim` is 2D, 2xD, or 3D corresponding to the stimulus):
+Figure S3, Supplement S.1 (where `twoDstim` is 2D, 2xD, or 3D corresponding to the stimulus):
 - rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_0.1E.pvd
 - rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_5.7E.pvd
 - rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_7000000.0E.pvd
@@ -214,14 +215,14 @@ Figure 23, Appendix A.1 (where `twoDstim` is 2D, 2xD, or 3D corresponding to the
 - rhomodel`twoDstim`_p_reduced_dt=0.05_T=10_D=40_5.7E.pvd
 - rhomodel`twoDstim`_p_reduced_dt=0.05_T=10_D=40_7000000.0E.pvd
 
-Figure 24, Appendix A.1:
+Figure S4, Supplement S.1:
 - PhiTotvsEs0_allD-m1_dt=0.05_T=10_D=100.png
 - RhoAvsEs0_allD-m1_dt=0.05_T=10_D=100.png
 
-Figure 25, Appendix A.2:
+Figure S5, Supplement S.2:
 - TimeGraphsMean_neumann_m1_dt=0.05_T=10_k6=1.png
 
-Figure 27, Appendix A.5: 
+Figure S7, Supplement S.5: 
 - coupled`coupling`_ca_neumann_m2_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_ca_neumann_m2_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_ca_neumann_m2_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
@@ -229,7 +230,7 @@ Figure 27, Appendix A.5:
 - coupled`coupling`_p_neumann_m2_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_p_neumann_m2_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 
-Figure 28, Appendix A.5:
+Figure S8, Supplement S.5:
 - coupled`coupling`_u_neumann_m2_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_u_neumann_m2_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_u_neumann_m2_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
