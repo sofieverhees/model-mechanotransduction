@@ -49,7 +49,7 @@ For the coupled model, there is one extra file:
   - `dt`: gives the time step (in x10s).
   - `E`: determines the substrate stiffness.
 - For 'signalling_model' without mechanics, the rest of the variables are:
-  - `D1`: determines the diffusion coefficient of $\phi_d$ and $\phi_a$ (in x0.1 $\mu$m<sup>2</sup>/s)
+  - `D1`: determines the diffusion coefficient of $\phi_d$ and $\phi_a$ (in x0.1 $\mu$ m<sup>2</sup>/s)
   - `twoDstim`: determines the kind of stimulus (2D, 2xD, 3D), as explained in the paper.
 - For the coupled model, the rest of the variables are:
   - `mesh_name`: determines the shape of the cell, `cell_substrate` being the radially symmetric cell, `lamellipodium` the lamellipodium shape, and `cell_substrate_empty-nucleus` the radially symmetric cell with a nucleus.
