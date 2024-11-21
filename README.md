@@ -194,9 +194,9 @@ Figure 19:
 Figure 20:
 - AllGraphsMean_neumann_2D_dt=0.05_T=10_k6=1.png
 
-Supplementary Material:
+Electronic Supplementary Material/ Appendix:
 
-Figure S1, Supplement S.1 (where `twoDstim` is 2D, 2xD, or 3D corresponding to the stimulus):
+Figure A1, Supplement S.1 (where `twoDstim` is 2D, 2xD, or 3D corresponding to the stimulus):
 - rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_0.1E.pvd
 - rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_5.7E.pvd
 - rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_7000000.0E.pvd
@@ -204,11 +204,11 @@ Figure S1, Supplement S.1 (where `twoDstim` is 2D, 2xD, or 3D corresponding to t
 - rhomodel`twoDstim`_p_reduced_dt=0.05_T=10_D=40_5.7E.pvd
 - rhomodel`twoDstim`_p_reduced_dt=0.05_T=10_D=40_7000000.0E.pvd
 
-Figure S2, Supplement S.1:
+Figure A2, Supplement S.1:
 - PhiTotvsEs0_allD-m1_dt=0.05_T=10_D=40.png
 - RhoAvsEs0_allD-m1_dt=0.05_T=10_D=40.png
 
-Figure S3, Supplement S.1 (where `twoDstim` is 2D, 2xD, or 3D corresponding to the stimulus):
+Figure A3, Supplement S.1 (where `twoDstim` is 2D, 2xD, or 3D corresponding to the stimulus):
 - rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_0.1E.pvd
 - rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_5.7E.pvd
 - rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_7000000.0E.pvd
@@ -216,14 +216,14 @@ Figure S3, Supplement S.1 (where `twoDstim` is 2D, 2xD, or 3D corresponding to t
 - rhomodel`twoDstim`_p_reduced_dt=0.05_T=10_D=40_5.7E.pvd
 - rhomodel`twoDstim`_p_reduced_dt=0.05_T=10_D=40_7000000.0E.pvd
 
-Figure S4, Supplement S.1:
+Figure A4, Supplement S.1:
 - PhiTotvsEs0_allD-m1_dt=0.05_T=10_D=100.png
 - RhoAvsEs0_allD-m1_dt=0.05_T=10_D=100.png
 
-Figure S5, Supplement S.2:
+Figure A5, Supplement S.2:
 - TimeGraphsMean_neumann_m1_dt=0.05_T=10_k6=1.png
 
-Figure S7, Supplement S.5: 
+Figure A7, Supplement S.5: 
 - coupled`coupling`_ca_neumann_m2_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_ca_neumann_m2_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_ca_neumann_m2_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
@@ -231,7 +231,7 @@ Figure S7, Supplement S.5:
 - coupled`coupling`_p_neumann_m2_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_p_neumann_m2_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 
-Figure S8, Supplement S.5:
+Figure A8, Supplement S.5:
 - coupled`coupling`_u_neumann_m2_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_u_neumann_m2_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_u_neumann_m2_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
