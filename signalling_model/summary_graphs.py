@@ -78,7 +78,7 @@ for D1 in [40, 100]:
             sized = file_pa.compute_cell_sizes(length=False, volume=False)
             cell_areas = np.abs(sized.cell_data["Area"])
             tot_vol = np.sum(cell_areas)
-            pa[i] = (np.sum(pa_values*cell_areas) / tot_vol)*10**(-15)
+            pa[i] = (np.sum(pa_values*cell_areas) / tot_vol)*10**(-5)
             #print('mean pa', np.sum(pa_values*cell_areas) / tot_vol)
 
             file_pa_2D = pv.read("../results/simulations/rhomodel2D_p_reduced_dt="+str(dt)+"_T="+str(T)+"_D="+str(D1)+"_"+str(E)+"E000199.vtu")
@@ -98,7 +98,7 @@ for D1 in [40, 100]:
             sized = file_pa_2xD.compute_cell_sizes(length=False, volume=False)
             cell_areas = np.abs(sized.cell_data["Area"])
             tot_vol = np.sum(cell_areas)
-            pa_2xD[i] = (np.sum(pa_2xD_values*cell_areas) / tot_vol)*10**(-15)
+            pa_2xD[i] = (np.sum(pa_2xD_values*cell_areas) / tot_vol)*10**(-5)
             #print('mean pa', np.sum(pa_values*cell_areas) / tot_vol)
 
             # get min and max values of phi_a (ca) and rho_a (ca) from saved arrays druing simulations for both 3D, 2D and 2xD stimulus
@@ -114,12 +114,12 @@ for D1 in [40, 100]:
             ca_min_2D[i] = tempstats_mm_2D[0,-1]
             ca_max_2D[i] = tempstats_mm_2D[1,-1]
 
-            pa_min[i] = tempstats_mm[4,-1]*10**(-15)
-            pa_max[i] = tempstats_mm[5,-1]*10**(-15)
-            pa_min_2D[i] = tempstats_mm_2D[4,-1]*10**(-15)
-            pa_max_2D[i] = tempstats_mm_2D[5,-1]*10**(-15)
-            pa_min_2xD[i] = tempstats_mm_2xD[4,-1]*10**(-15)
-            pa_max_2xD[i] = tempstats_mm_2xD[5,-1]*10**(-15)
+            pa_min[i] = tempstats_mm[4,-1]*10**(-5)
+            pa_max[i] = tempstats_mm[5,-1]*10**(-5)
+            pa_min_2D[i] = tempstats_mm_2D[4,-1]*10**(-5)
+            pa_max_2D[i] = tempstats_mm_2D[5,-1]*10**(-5)
+            pa_min_2xD[i] = tempstats_mm_2xD[4,-1]*10**(-5)
+            pa_max_2xD[i] = tempstats_mm_2xD[5,-1]*10**(-5)
             
             i += 1
 
@@ -134,7 +134,7 @@ for D1 in [40, 100]:
         fig = plt.figure(figsize=(12,8))
         plt.xscale('log')
         plt.xlabel('E (kPa)', fontsize=axes_labels)
-        plt.ylabel('$\phi_a$ ($\mu$M)', fontsize=axes_labels)
+        plt.ylabel('$\phi_a$ ($\mu$mol/dm$^3$)', fontsize=axes_labels)
         plt.ylim(0.2,1.2)
         plt.xticks(fontsize=axes_ticks)
         plt.yticks(fontsize=axes_ticks)
@@ -150,8 +150,8 @@ for D1 in [40, 100]:
         fig = plt.figure(figsize=(12,8))
         plt.xscale('log')
         plt.xlabel('E (kPa)', fontsize=axes_labels)
-        plt.ylabel(r'$\rho_a$ ($\mu$mol/$\mu$m$^2$)', fontsize=axes_labels)
-        plt.ylim(0, 0.9*10**(-15))
+        plt.ylabel(r'$\rho_a$ ($\mu$mol/dm$^2$)', fontsize=axes_labels)
+        plt.ylim(0, 0.9*10**(-5))
         plt.xticks(fontsize=axes_ticks)
         plt.yticks(fontsize=axes_ticks)
         plt.grid(alpha=0.3, which='both', linestyle=':')
