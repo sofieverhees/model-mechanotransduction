@@ -27,18 +27,22 @@ Additionally, the next packages have to be installed (e.g. with pip)
 
 
 ## Code Structure
-This code is organised in three different folders:
+This code is organised in five different folders:
 - 'meshes': includes mesh files (.geo and .msh), created with [gmsh](https://gmsh.info/) 4.11.1, for different cell shapes. These files should not be touched to recreate any results.
 - 'signalling_model': includes all files needed to recreate results for the 'reduced model' without mechanics, as given in Appendix A.1.
 - 'coupled_model': includes all files needed to recreate any results for the model with bidirectional coupling between the chemistry and the mechanics.
+- 'viscoelastic_model': includes all files needed to recreate results for the model with viscoelastic stress, as given in Appendix A.7.
+- 'parameter_sensitivity_analysis': includes all files needed to recreate results of the brief robustness analysis in Appendix A.6.
 
-Both '_model' folders include:
+The '_model' folders may include:
 - 'loop.sh': bash file running 'main.py' for different parameters and versions of the model.
 - 'main.py': creates simulations of the model, includes all main code.
-- 'summary_graphs.py': given the saved data from 'main.py', creates graphs that plot $f(\phi_a)$, $div(u)$, $\phi_a$ and $\rho_a$ as a function of the susbstrate stiffness $E$, as can be found in Figures 5, 10, 15 & 20 (for the coupled model), and Figures 22 & 24 in Appendix A.1 (for the 'reduced model' without mechanics).
+- 'summary_graphs.py': given the saved data from 'main.py', creates graphs that plot $f(\phi_a)$, $div(u)$, $\phi_a$ and $\rho_a$ as a function of the susbstrate stiffness $E$, as can be found in Figures 3, 5, 7 & S4_Fig (for the coupled model), and Figures A2 & A4 in Appendix A.1 (for the 'reduced model' without mechanics).
+- 'tempstats.py': given the saved data from 'main.py', creates graphs that plot $f(\phi_a)$, $div(u)$, $\phi_a$ and $\rho_a$ as a function of time, as can be found in Figure A5 in Appendix A.2.
 
-For the coupled model, there is one extra file:
-- 'tempstats.py': given the saved data from 'main.py', creates graphs that plot $f(\phi_a)$, $div(u)$, $\phi_a$ and $\rho_a$ as a function of time, as can be found in Figure 25 in Appendix A.2.
+The 'parameter_sensitivity_analysis' includes:
+- 'main.py': creates simulations of the model for different values of the parameters $C_1$, $\nu_c$, $k_7$, $k_8$, $p$, and $k_6$ when uncommenting the appropriate lines.
+- 'plot.py': gived the saved data from 'main.py', creates the graph as seen in Figure A9 in Appendix A.7.
 
 > [!WARNING]
 > Files 'summary_graphs.py' and 'tempstats.py' should only be run after running the corresponding 'loop.sh' as it requires the output from this programme.
@@ -53,7 +57,7 @@ For the coupled model, there is one extra file:
   - `twoDstim`: determines the kind of stimulus (2D, 2xD, 3D), as explained in the paper.
 - For the coupled model, the rest of the variables are:
   - `mesh_name`: determines the shape of the cell, `cell_substrate` being the radially symmetric cell, `lamellipodium` the lamellipodium shape, and `cell_substrate_empty-nucleus` the radially symmetric cell with a nucleus.
-  - `coupling`: determines which coupling between the mechanics and the chemistry, where 1 --> $E_c=0.6$ & $C_1 = 0$; 2 --> $E_c=0.6$ & $C_1 = 1$; 3 --> $E_c=f(\phi_a)$ & $C_1 = 0$; 4 --> $E_c=f(\phi_a)$ & $C_1 = 1$.
+  - `coupling`: determines which coupling between the mechanics and the chemistry, where 1 --> $E_c=0.6$ & $C_1 = 0$; 2 --> $E_c=0.6$ & $C_1 = 0.1$; 3 --> $E_c=f(\phi_a)$ & $C_1 = 0$; 4 --> $E_c=f(\phi_a)$ & $C_1 = 0.1$.
   - `C1`: determines the value of $C_1$.
   - `twoDstim`: determines where the substrate stiffness has effect with `yes` meaning only on the bottom boundary (2xD stimulus) and `no` meaning everywhere on the boundary (3D stimulus).
   - `partfixed`: determines which boundary condition is put on u with `yes` meaning no deformation in the vertical direction on the bottom of the cell (rigid substrate) and `no` meaning only the force boundary condition.
@@ -61,9 +65,9 @@ For the coupled model, there is one extra file:
 
 ## Relate Results to Figures
 If the files are run as instructed, a folder 'results' will be created including the following subfolders
-- 'simulations': includes simulation results (.vtu and .pvd), which are visualised with [Paraview](https://www.paraview.org/) 5.10.0-RC1 and correspond to Figures 1-4, 6-9, 11-14 & 16-19, and Figures 27 & 28 in Appendix A.5.
+- 'simulations': includes simulation results (.vtu and .pvd), which are visualised with [Paraview](https://www.paraview.org/) 5.10.0-RC1 and correspond to Figures 1, 2, 4, 6, 8, S1_Fig, S2_Fig, S3_Fig, and Figures A7 in Appendix A.5 and A9 in Appendix A.7.
 - 'temp': includes saved numpy arrays (.npy) with the discrete time derivative, L2-norm, minumum and maximum values of $\phi_a$, $\phi_d$, $\rho_a$ and $u$ as well as other variables saved at each time step.
-- 'figures': includes figures (.png) that correspond to Figures 5, 10, 15 & 20, Figures 22 & 24 in Appendix A.1, and Figure 25 in Appendix A.2.
+- 'figures': includes figures (.png) that correspond to Figures 3, 5, 7 and S4_Fig, Figures A2 & A4 in Appendix A.1, and Figure A5 in Appendix A.2.
 
 ### Different parameters/ versions
 The resulting files will be named according to the different parameters and version that can be chosen, e.g. for the 'reduced model', the simululation results are named 
@@ -76,127 +80,135 @@ where `var` is the variable $\phi_d$ if it states `cd`, $\phi_a$ if `ca`, $\rho_
 
 **Using this formatting, we have the following files corresponding to each different Figures:**
 
-where `coupling` can be 1 --> $E_c=0.6$ & $C_1 = 0$; 2 --> $E_c=0.6$ & $C_1 = 1$; 3 --> $E_c=f(\phi_a)$ & $C_1 = 0$; 4 --> $E_c=f(\phi_a)$ & $C_1 = 1$,
+where `coupling` can be 1 --> $E_c=0.6$ & $C_1 = 0$; 2 --> $E_c=0.6$ & $C_1 = 0.1$; 3 --> $E_c=f(\phi_a)$ & $C_1 = 0$; 4 --> $E_c=f(\phi_a)$ & $C_1 = 0.1$,
 
 Figure 1: 
+- coupled`coupling`_2D_cd_partfixed_m1_dt=0.05_T=10_k6=1.0_0.1E.pvd
+- coupled`coupling`_2D_cd_partfixed_m1_dt=0.05_T=10_k6=1.0_5.7E.pvd
+- coupled`coupling`_2D_cd_partfixed_m1_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 - coupled`coupling`_2D_ca_partfixed_m1_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_2D_ca_partfixed_m1_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_2D_ca_partfixed_m1_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 - coupled`coupling`_2D_p_partfixed_m1_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_2D_p_partfixed_m1_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_2D_p_partfixed_m1_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
-
-Figure 2:
 - coupled`coupling`_2D_u_partfixed_m1_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_2D_u_partfixed_m1_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_2D_u_partfixed_m1_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 
-Figure 3:
+Figure 2:
+- coupled`coupling`_2D_cd_partfixed_m0_dt=0.05_T=10_k6=1.0_0.1E.pvd
+- coupled`coupling`_2D_cd_partfixed_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
+- coupled`coupling`_2D_cd_partfixed_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 - coupled`coupling`_2D_ca_partfixed_m0_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_2D_ca_partfixed_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_2D_ca_partfixed_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 - coupled`coupling`_2D_p_partfixed_m0_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_2D_p_partfixed_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_2D_p_partfixed_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
-
-Figure 4:
 - coupled`coupling`_2D_u_partfixed_m0_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_2D_u_partfixed_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_2D_u_partfixed_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 
-Figure 5:
+Figure 3:
 - AllGraphsMean_partfixed_2D_dt=0.05_T=10_k6=1.png
 
-Figure 6: 
+Figure 4: 
+- coupled`coupling`_cd_partfixed_m1_dt=0.05_T=10_k6=1.0_0.1E.pvd
+- coupled`coupling`_cd_partfixed_m1_dt=0.05_T=10_k6=1.0_5.7E.pvd
+- coupled`coupling`_cd_partfixed_m1_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 - coupled`coupling`_ca_partfixed_m1_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_ca_partfixed_m1_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_ca_partfixed_m1_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 - coupled`coupling`_p_partfixed_m1_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_p_partfixed_m1_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_p_partfixed_m1_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
-
-Figure 7:
 - coupled`coupling`_u_partfixed_m1_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_u_partfixed_m1_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_u_partfixed_m1_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 
-Figure 8:
-- coupled`coupling`_ca_partfixed_m0_dt=0.05_T=10_k6=1.0_0.1E.pvd
-- coupled`coupling`_ca_partfixed_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
-- coupled`coupling`_ca_partfixed_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
-- coupled`coupling`_p_partfixed_m0_dt=0.05_T=10_k6=1.0_0.1E.pvd
-- coupled`coupling`_p_partfixed_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
-- coupled`coupling`_p_partfixed_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
-
-Figure 9:
-- coupled`coupling`_u_partfixed_m0_dt=0.05_T=10_k6=1.0_0.1E.pvd
-- coupled`coupling`_u_partfixed_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
-- coupled`coupling`_u_partfixed_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
-
-Figure 10:
+Figure 5:
 - AllGraphsMean_partfixed_dt=0.05_T=10_k6=1.png
 
 Figure 6: 
+- coupled`coupling`_cd_neumann_m1_dt=0.05_T=10_k6=1.0_0.1E.pvd
+- coupled`coupling`_cd_neumann_m1_dt=0.05_T=10_k6=1.0_5.7E.pvd
+- coupled`coupling`_cd_neumann_m1_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 - coupled`coupling`_ca_neumann_m1_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_ca_neumann_m1_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_ca_neumann_m1_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 - coupled`coupling`_p_neumann_m1_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_p_neumann_m1_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_p_neumann_m1_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
-
-Figure 7:
 - coupled`coupling`_u_neumann_m1_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_u_neumann_m1_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_u_neumann_m1_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 
-Figure 8:
-- coupled`coupling`_ca_neumann_m0_dt=0.05_T=10_k6=1.0_0.1E.pvd
-- coupled`coupling`_ca_neumann_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
-- coupled`coupling`_ca_neumann_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
-- coupled`coupling`_p_neumann_m0_dt=0.05_T=10_k6=1.0_0.1E.pvd
-- coupled`coupling`_p_neumann_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
-- coupled`coupling`_p_neumann_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
-
-Figure 9:
-- coupled`coupling`_u_neumann_m0_dt=0.05_T=10_k6=1.0_0.1E.pvd
-- coupled`coupling`_u_neumann_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
-- coupled`coupling`_u_neumann_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
-
-Figure 10:
+Figure 7:
 - AllGraphsMean_neumann_dt=0.05_T=10_k6=1.png
 
-Figure 16: 
+Figure 8: 
+- coupled`coupling`_2D_cd_neumann_m1_dt=0.05_T=10_k6=1.0_0.1E.pvd
+- coupled`coupling`_2D_cd_neumann_m1_dt=0.05_T=10_k6=1.0_5.7E.pvd
+- coupled`coupling`_2D_cd_neumann_m1_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 - coupled`coupling`_2D_ca_neumann_m1_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_2D_ca_neumann_m1_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_2D_ca_neumann_m1_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 - coupled`coupling`_2D_p_neumann_m1_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_2D_p_neumann_m1_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_2D_p_neumann_m1_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
-
-Figure 17:
 - coupled`coupling`_2D_u_neumann_m1_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_2D_u_neumann_m1_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_2D_u_neumann_m1_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 
-Figure 18:
+Electronic Supplementary Material/ Appendix:
+
+Figure S1_Fig:
+- coupled`coupling`_cd_partfixed_m0_dt=0.05_T=10_k6=1.0_0.1E.pvd
+- coupled`coupling`_cd_partfixed_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
+- coupled`coupling`_cd_partfixed_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
+- coupled`coupling`_ca_partfixed_m0_dt=0.05_T=10_k6=1.0_0.1E.pvd
+- coupled`coupling`_ca_partfixed_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
+- coupled`coupling`_ca_partfixed_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
+- coupled`coupling`_p_partfixed_m0_dt=0.05_T=10_k6=1.0_0.1E.pvd
+- coupled`coupling`_p_partfixed_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
+- coupled`coupling`_p_partfixed_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
+- coupled`coupling`_u_partfixed_m0_dt=0.05_T=10_k6=1.0_0.1E.pvd
+- coupled`coupling`_u_partfixed_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
+- coupled`coupling`_u_partfixed_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
+
+Figure S2_Fig:
+- coupled`coupling`_cd_neumann_m0_dt=0.05_T=10_k6=1.0_0.1E.pvd
+- coupled`coupling`_cd_neumann_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
+- coupled`coupling`_cd_neumann_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
+- coupled`coupling`_ca_neumann_m0_dt=0.05_T=10_k6=1.0_0.1E.pvd
+- coupled`coupling`_ca_neumann_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
+- coupled`coupling`_ca_neumann_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
+- coupled`coupling`_p_neumann_m0_dt=0.05_T=10_k6=1.0_0.1E.pvd
+- coupled`coupling`_p_neumann_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
+- coupled`coupling`_p_neumann_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
+- coupled`coupling`_u_neumann_m0_dt=0.05_T=10_k6=1.0_0.1E.pvd
+- coupled`coupling`_u_neumann_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
+- coupled`coupling`_u_neumann_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
+
+Figure S3_Fig:
+- coupled`coupling`_2D_cd_neumann_m0_dt=0.05_T=10_k6=1.0_0.1E.pvd
+- coupled`coupling`_2D_cd_neumann_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
+- coupled`coupling`_2D_cd_neumann_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 - coupled`coupling`_2D_ca_neumann_m0_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_2D_ca_neumann_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_2D_ca_neumann_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 - coupled`coupling`_2D_p_neumann_m0_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_2D_p_neumann_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_2D_p_neumann_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
-
-Figure 19:
 - coupled`coupling`_2D_u_neumann_m0_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_2D_u_neumann_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_2D_u_neumann_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 
-Figure 20:
+Figure S4_Fig:
 - AllGraphsMean_neumann_2D_dt=0.05_T=10_k6=1.png
 
-Electronic Supplementary Material/ Appendix:
-
-Figure A1, Supplement S.1 (where `twoDstim` is 2D, 2xD, or 3D corresponding to the stimulus):
+Figure A1, S1_Appendix, Appendix A.1 (where `twoDstim` is 2D, 2xD, or 3D corresponding to the stimulus):
 - rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_0.1E.pvd
 - rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_5.7E.pvd
 - rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_7000000.0E.pvd
@@ -204,11 +216,11 @@ Figure A1, Supplement S.1 (where `twoDstim` is 2D, 2xD, or 3D corresponding to t
 - rhomodel`twoDstim`_p_reduced_dt=0.05_T=10_D=40_5.7E.pvd
 - rhomodel`twoDstim`_p_reduced_dt=0.05_T=10_D=40_7000000.0E.pvd
 
-Figure A2, Supplement S.1:
+Figure A2, Supplement S1_Appendix, Appendix A.1:
 - PhiTotvsEs0_allD-m1_dt=0.05_T=10_D=40.png
 - RhoAvsEs0_allD-m1_dt=0.05_T=10_D=40.png
 
-Figure A3, Supplement S.1 (where `twoDstim` is 2D, 2xD, or 3D corresponding to the stimulus):
+Figure A3, S1_Appendix, Appendix A.1 (where `twoDstim` is 2D, 2xD, or 3D corresponding to the stimulus):
 - rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_0.1E.pvd
 - rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_5.7E.pvd
 - rhomodel`twoDstim`_ca_reduced_dt=0.05_T=10_D=40_7000000.0E.pvd
@@ -216,22 +228,40 @@ Figure A3, Supplement S.1 (where `twoDstim` is 2D, 2xD, or 3D corresponding to t
 - rhomodel`twoDstim`_p_reduced_dt=0.05_T=10_D=40_5.7E.pvd
 - rhomodel`twoDstim`_p_reduced_dt=0.05_T=10_D=40_7000000.0E.pvd
 
-Figure A4, Supplement S.1:
+Figure A4, S1_Appendix, Appendix A.1:
 - PhiTotvsEs0_allD-m1_dt=0.05_T=10_D=100.png
 - RhoAvsEs0_allD-m1_dt=0.05_T=10_D=100.png
 
-Figure A5, Supplement S.2:
+Figure A5, S1_Appendix, Appendix A.2:
 - TimeGraphsMean_neumann_m1_dt=0.05_T=10_k6=1.png
 
-Figure A7, Supplement S.5: 
+Figure A7, S1_Appendix, Appendix A.5: 
+- coupled`coupling`_cd_neumann_m2_dt=0.05_T=10_k6=1.0_0.1E.pvd
+- coupled`coupling`_cd_neumann_m2_dt=0.05_T=10_k6=1.0_5.7E.pvd
+- coupled`coupling`_cd_neumann_m2_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 - coupled`coupling`_ca_neumann_m2_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_ca_neumann_m2_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_ca_neumann_m2_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 - coupled`coupling`_p_neumann_m2_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_p_neumann_m2_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_p_neumann_m2_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
+- coupled`coupling`_u_neumann_m2_dt=0.05_T=10_k6=1.0_0.1E.pvd
+- coupled`coupling`_u_neumann_m2_dt=0.05_T=10_k6=1.0_5.7E.pvd
+- coupled`coupling`_u_neumann_m2_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 
-Figure A8, Supplement S.5:
+Figure A8, S1_Appendix, Appendix A.6: 
+- param_sens_anal_vdiff.png
+
+Figure A9, S1_Appendix, Appendix A.7: 
+- coupled`coupling`_cd_neumann_m2_dt=0.05_T=10_k6=1.0_0.1E.pvd
+- coupled`coupling`_cd_neumann_m2_dt=0.05_T=10_k6=1.0_5.7E.pvd
+- coupled`coupling`_cd_neumann_m2_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
+- coupled`coupling`_ca_neumann_m2_dt=0.05_T=10_k6=1.0_0.1E.pvd
+- coupled`coupling`_ca_neumann_m2_dt=0.05_T=10_k6=1.0_5.7E.pvd
+- coupled`coupling`_ca_neumann_m2_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
+- coupled`coupling`_p_neumann_m2_dt=0.05_T=10_k6=1.0_0.1E.pvd
+- coupled`coupling`_p_neumann_m2_dt=0.05_T=10_k6=1.0_5.7E.pvd
+- coupled`coupling`_p_neumann_m2_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 - coupled`coupling`_u_neumann_m2_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_u_neumann_m2_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_u_neumann_m2_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
