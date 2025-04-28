@@ -81,7 +81,7 @@ for bcs in ['_partfixed','_neumann']:
                     sized = file_pa.compute_cell_sizes(length=False, volume=False)
                     cell_areas = np.abs(sized.cell_data["Area"])
                     tot_vol = np.sum(cell_areas)
-                    pa[order[j],i] = (np.sum(pa_values*cell_areas) / tot_vol)*10**(-15)
+                    pa[order[j],i] = (np.sum(pa_values*cell_areas) / tot_vol)*10**(-5)
                     #print('mean pa', np.sum(pa_values*cell_areas) / tot_vol)
                     
                     file_u = pv.read("../results/simulations/coupled"+str(coupling)+str(stim)+"_u"+str(bcs)+"_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+"_"+str(bigE)+"E000199.vtu")
@@ -123,8 +123,8 @@ for bcs in ['_partfixed','_neumann']:
                     ca_min[order[j],i] = tempstats_mm[0,-1]
                     ca_max[order[j],i] = tempstats_mm[1,-1]
 
-                    pa_min[order[j],i] = tempstats_mm[4,-1]*10**(-15)
-                    pa_max[order[j],i] = tempstats_mm[5,-1]*10**(-15)
+                    pa_min[order[j],i] = tempstats_mm[4,-1]*10**(-5)
+                    pa_max[order[j],i] = tempstats_mm[5,-1]*10**(-5)
 
                     i += 1
                 
@@ -155,7 +155,7 @@ for bcs in ['_partfixed','_neumann']:
                         sized = file_pa.compute_cell_sizes(length=False, volume=False)
                         cell_areas = np.abs(sized.cell_data["Area"])
                         tot_vol = np.sum(cell_areas)
-                        pa[order[j],i] = (np.sum(pa_values*cell_areas) / tot_vol)*10**(-15)
+                        pa[order[j],i] = (np.sum(pa_values*cell_areas) / tot_vol)*10**(-5)
                         #print('mean pa', np.sum(pa_values*cell_areas) / tot_vol)
                         
                         file_u = pv.read("../results/simulations/coupled"+str(coupling)+str(stim)+"_u"+str(bcs)+"_m"+str(meshnr)+"_dt="+str(dt)+"_T="+str(T)+"_k6="+str(k6)+'_C1='+str(C1)+"_"+str(bigE)+"E000199.vtu")
@@ -197,8 +197,8 @@ for bcs in ['_partfixed','_neumann']:
                         ca_min[order[j],i] = tempstats_mm[0,-1]
                         ca_max[order[j],i] = tempstats_mm[1,-1]
 
-                        pa_min[order[j],i] = tempstats_mm[4,-1]*10**(-15)
-                        pa_max[order[j],i] = tempstats_mm[5,-1]*10**(-15)
+                        pa_min[order[j],i] = tempstats_mm[4,-1]*10**(-5)
+                        pa_max[order[j],i] = tempstats_mm[5,-1]*10**(-5)
 
                         i += 1
                     
@@ -217,9 +217,9 @@ for bcs in ['_partfixed','_neumann']:
             axs[0,k].set_ylabel('$f(\phi_a)$ (kPa)', fontsize=axes_labels)
             axs[0,k].grid(alpha=0.5, which='both', linestyle=':')
             axs[0,k].errorbar(Es, Ec[0,:], yerr=Ec_err[:,0,:], marker='o', markerfacecolor=myblue, markeredgecolor=myblue, linestyle='-', color=myblue, capsize=10, label='$C_1=0$')
-            axs[0,k].errorbar(Es, Ec[1,:], yerr=Ec_err[:,0,:], marker='o', markerfacecolor=myred, markeredgecolor=myred, linestyle='-', color=myred, capsize=10, label='$C_1=0.5$')
-            axs[0,k].errorbar(Es, Ec[2,:], yerr=Ec_err[:,0,:], marker='o', markerfacecolor=mygreen, markeredgecolor=mygreen, linestyle='-', color=mygreen, capsize=10, label='$C_1=1$')
-            axs[0,k].errorbar(Es, Ec[3,:], yerr=Ec_err[:,0,:], marker='o', markerfacecolor=myyellow, markeredgecolor=myyellow, linestyle='-', color=myyellow, capsize=10, label='$C_1=2$')
+            axs[0,k].errorbar(Es, Ec[1,:], yerr=Ec_err[:,0,:], marker='o', markerfacecolor=myred, markeredgecolor=myred, linestyle='-', color=myred, capsize=10, label='$C_1=0.05$')
+            axs[0,k].errorbar(Es, Ec[2,:], yerr=Ec_err[:,0,:], marker='o', markerfacecolor=mygreen, markeredgecolor=mygreen, linestyle='-', color=mygreen, capsize=10, label='$C_1=0.1$')
+            axs[0,k].errorbar(Es, Ec[3,:], yerr=Ec_err[:,0,:], marker='o', markerfacecolor=myyellow, markeredgecolor=myyellow, linestyle='-', color=myyellow, capsize=10, label='$C_1=0.2$')
 
             axs[0,k+1].set_xscale('log')
             axs[0,k+1].set_ylim(0, 2.5)
@@ -227,69 +227,69 @@ for bcs in ['_partfixed','_neumann']:
             axs[0,k+1].set_ylabel('$f(\phi_a)$ (kPa)', fontsize=axes_labels)
             axs[0,k+1].grid(alpha=0.5, which='both', linestyle=':')
             axs[0,k+1].errorbar(Es, Ec[4,:], yerr=Ec_err[:,0,:], marker='o', markerfacecolor=myblue, markeredgecolor=myblue, linestyle='-', color=myblue, capsize=10, label='$C_1=0$')
-            axs[0,k+1].errorbar(Es, Ec[5,:], yerr=Ec_err[:,0,:], marker='o', markerfacecolor=myred, markeredgecolor=myred, linestyle='-', color=myred, capsize=10, label='$C_1=0.5$')
-            axs[0,k+1].errorbar(Es, Ec[6,:], yerr=Ec_err[:,0,:], marker='o', markerfacecolor=mygreen, markeredgecolor=mygreen, linestyle='-', color=mygreen, capsize=10, label='$C_1=1$')
-            axs[0,k+1].errorbar(Es, Ec[7,:], yerr=Ec_err[:,0,:], marker='o', markerfacecolor=myyellow, markeredgecolor=myyellow, linestyle='-', color=myyellow, capsize=10, label='$C_1=2$')
+            axs[0,k+1].errorbar(Es, Ec[5,:], yerr=Ec_err[:,0,:], marker='o', markerfacecolor=myred, markeredgecolor=myred, linestyle='-', color=myred, capsize=10, label='$C_1=0.05$')
+            axs[0,k+1].errorbar(Es, Ec[6,:], yerr=Ec_err[:,0,:], marker='o', markerfacecolor=mygreen, markeredgecolor=mygreen, linestyle='-', color=mygreen, capsize=10, label='$C_1=0.1$')
+            axs[0,k+1].errorbar(Es, Ec[7,:], yerr=Ec_err[:,0,:], marker='o', markerfacecolor=myyellow, markeredgecolor=myyellow, linestyle='-', color=myyellow, capsize=10, label='$C_1=0.2$')
 
             axs[1,k].set_xscale('log')
             axs[1,k].set_ylim(-0.2,2.3)
             axs[1,k].set_xlabel('$E$ (kPa)', fontsize=axes_labels)
-            axs[1,k].set_ylabel('div($u$) ($\mu$m)', fontsize=axes_labels)
+            axs[1,k].set_ylabel('div($u$)', fontsize=axes_labels)
             axs[1,k].grid(alpha=0.5, which='both', linestyle=':')
             axs[1,k].errorbar(Es, u_div_l2[0,:], yerr=u_div_err[:,0,:], marker='o', markerfacecolor=myblue, markeredgecolor=myblue, linestyle='-', color=myblue, capsize=10, label='$C_1=0$')
-            axs[1,k].errorbar(Es, u_div_l2[1,:], yerr=u_div_err[:,0,:], marker='o', markerfacecolor=myred, markeredgecolor=myred, linestyle='-', color=myred, capsize=10, label='$C_1=0.5$')
-            axs[1,k].errorbar(Es, u_div_l2[2,:], yerr=u_div_err[:,0,:], marker='o', markerfacecolor=mygreen, markeredgecolor=mygreen, linestyle='-', color=mygreen, capsize=10, label='$C_1=1$')
-            axs[1,k].errorbar(Es, u_div_l2[3,:], yerr=u_div_err[:,0,:], marker='o', markerfacecolor=myyellow, markeredgecolor=myyellow, linestyle='-', color=myyellow, capsize=10, label='$C_1=2$')
+            axs[1,k].errorbar(Es, u_div_l2[1,:], yerr=u_div_err[:,0,:], marker='o', markerfacecolor=myred, markeredgecolor=myred, linestyle='-', color=myred, capsize=10, label='$C_1=0.05$')
+            axs[1,k].errorbar(Es, u_div_l2[2,:], yerr=u_div_err[:,0,:], marker='o', markerfacecolor=mygreen, markeredgecolor=mygreen, linestyle='-', color=mygreen, capsize=10, label='$C_1=0.1$')
+            axs[1,k].errorbar(Es, u_div_l2[3,:], yerr=u_div_err[:,0,:], marker='o', markerfacecolor=myyellow, markeredgecolor=myyellow, linestyle='-', color=myyellow, capsize=10, label='$C_1=0.2$')
 
             axs[1,k+1].set_xscale('log')
             axs[1,k+1].set_ylim(-0.2,2.3)
             axs[1,k+1].set_xlabel('$E$ (kPa)', fontsize=axes_labels)
-            axs[1,k+1].set_ylabel('div($u$) ($\mu$m)', fontsize=axes_labels)
+            axs[1,k+1].set_ylabel('div($u$)', fontsize=axes_labels)
             axs[1,k+1].grid(alpha=0.5, which='both', linestyle=':')
             axs[1,k+1].errorbar(Es, u_div_l2[4,:], yerr=u_div_err[:,0,:], marker='o', markerfacecolor=myblue, markeredgecolor=myblue, linestyle='-', color=myblue, capsize=10, label='$C_1=0$')
-            axs[1,k+1].errorbar(Es, u_div_l2[5,:], yerr=u_div_err[:,0,:], marker='o', markerfacecolor=myred, markeredgecolor=myred, linestyle='-', color=myred, capsize=10, label='$C_1=0.5$')
-            axs[1,k+1].errorbar(Es, u_div_l2[6,:], yerr=u_div_err[:,0,:], marker='o', markerfacecolor=mygreen, markeredgecolor=mygreen, linestyle='-', color=mygreen, capsize=10, label='$C_1=1$')
-            axs[1,k+1].errorbar(Es, u_div_l2[7,:], yerr=u_div_err[:,0,:], marker='o', markerfacecolor=myyellow, markeredgecolor=myyellow, linestyle='-', color=myyellow, capsize=10, label='$C_1=2$')
+            axs[1,k+1].errorbar(Es, u_div_l2[5,:], yerr=u_div_err[:,0,:], marker='o', markerfacecolor=myred, markeredgecolor=myred, linestyle='-', color=myred, capsize=10, label='$C_1=0.05$')
+            axs[1,k+1].errorbar(Es, u_div_l2[6,:], yerr=u_div_err[:,0,:], marker='o', markerfacecolor=mygreen, markeredgecolor=mygreen, linestyle='-', color=mygreen, capsize=10, label='$C_1=0.1$')
+            axs[1,k+1].errorbar(Es, u_div_l2[7,:], yerr=u_div_err[:,0,:], marker='o', markerfacecolor=myyellow, markeredgecolor=myyellow, linestyle='-', color=myyellow, capsize=10, label='$C_1=0.2$')
 
             axs[2,k].set_xscale('log')
             axs[2,k].set_ylim(0.2,1.2)
             axs[2,k].set_xlabel('$E$ (kPa)', fontsize=axes_labels)
-            axs[2,k].set_ylabel('$\phi_a$ ($\mu$M)', fontsize=axes_labels)
+            axs[2,k].set_ylabel('$\phi_a$ ($\mu$mol/dm$^3$)', fontsize=axes_labels)
             axs[2,k].grid(alpha=0.5, which='both', linestyle=':')
             axs[2,k].errorbar(Es, ca[0,:], yerr=ca_err[:,0,:], marker='o', markerfacecolor=myblue, markeredgecolor=myblue, linestyle='-', color=myblue, capsize=10, label='$C_1=0$')
-            axs[2,k].errorbar(Es, ca[1,:], yerr=ca_err[:,0,:], marker='o', markerfacecolor=myred, markeredgecolor=myred, linestyle='-', color=myred, capsize=10, label='$C_1=0.5$')
-            axs[2,k].errorbar(Es, ca[2,:], yerr=ca_err[:,0,:], marker='o', markerfacecolor=mygreen, markeredgecolor=mygreen, linestyle='-', color=mygreen, capsize=10, label='$C_1=1$')
-            axs[2,k].errorbar(Es, ca[3,:], yerr=ca_err[:,0,:], marker='o', markerfacecolor=myyellow, markeredgecolor=myyellow, linestyle='-', color=myyellow, capsize=10, label='$C_1=2$')
+            axs[2,k].errorbar(Es, ca[1,:], yerr=ca_err[:,0,:], marker='o', markerfacecolor=myred, markeredgecolor=myred, linestyle='-', color=myred, capsize=10, label='$C_1=0.05$')
+            axs[2,k].errorbar(Es, ca[2,:], yerr=ca_err[:,0,:], marker='o', markerfacecolor=mygreen, markeredgecolor=mygreen, linestyle='-', color=mygreen, capsize=10, label='$C_1=0.1$')
+            axs[2,k].errorbar(Es, ca[3,:], yerr=ca_err[:,0,:], marker='o', markerfacecolor=myyellow, markeredgecolor=myyellow, linestyle='-', color=myyellow, capsize=10, label='$C_1=0.2$')
             
             axs[2,k+1].set_xscale('log')
             axs[2,k+1].set_ylim(0.2,1.2)
             axs[2,k+1].set_xlabel('$E$ (kPa)', fontsize=axes_labels)
-            axs[2,k+1].set_ylabel('$\phi_a$ ($\mu$M)', fontsize=axes_labels)
+            axs[2,k+1].set_ylabel('$\phi_a$ ($\mu$mol/dm$^3$)', fontsize=axes_labels)
             axs[2,k+1].grid(alpha=0.5, which='both', linestyle=':')
             axs[2,k+1].errorbar(Es, ca[4,:], yerr=ca_err[:,0,:], marker='o', markerfacecolor=myblue, markeredgecolor=myblue, linestyle='-', color=myblue, capsize=10, label='$C_1=0$')
-            axs[2,k+1].errorbar(Es, ca[5,:], yerr=ca_err[:,0,:], marker='o', markerfacecolor=myred, markeredgecolor=myred, linestyle='-', color=myred, capsize=10, label='$C_1=0.5$')
-            axs[2,k+1].errorbar(Es, ca[6,:], yerr=ca_err[:,0,:], marker='o', markerfacecolor=mygreen, markeredgecolor=mygreen, linestyle='-', color=mygreen, capsize=10, label='$C_1=1$')
-            axs[2,k+1].errorbar(Es, ca[7,:], yerr=ca_err[:,0,:], marker='o', markerfacecolor=myyellow, markeredgecolor=myyellow, linestyle='-', color=myyellow, capsize=10, label='$C_1=2$')
+            axs[2,k+1].errorbar(Es, ca[5,:], yerr=ca_err[:,0,:], marker='o', markerfacecolor=myred, markeredgecolor=myred, linestyle='-', color=myred, capsize=10, label='$C_1=0.05$')
+            axs[2,k+1].errorbar(Es, ca[6,:], yerr=ca_err[:,0,:], marker='o', markerfacecolor=mygreen, markeredgecolor=mygreen, linestyle='-', color=mygreen, capsize=10, label='$C_1=0.1$')
+            axs[2,k+1].errorbar(Es, ca[7,:], yerr=ca_err[:,0,:], marker='o', markerfacecolor=myyellow, markeredgecolor=myyellow, linestyle='-', color=myyellow, capsize=10, label='$C_1=0.2$')
        
             axs[3,k].set_xscale('log')
-            axs[3,k].set_ylim(0, 1*10**(-15))
+            axs[3,k].set_ylim(0, 1*10**(-5))
             axs[3,k].set_xlabel('$E$ (kPa)', fontsize=axes_labels)
-            axs[3,k].set_ylabel(r'$\rho_a$ ($\mu$mol/$\mu$m$^2$)', fontsize=axes_labels)
+            axs[3,k].set_ylabel(r'$\rho_a$ ($\mu$mol/dm$^2$)', fontsize=axes_labels)
             axs[3,k].grid(alpha=0.5, which='both', linestyle=':')
             axs[3,k].errorbar(Es, pa[0,:], yerr=pa_err[:,0,:], marker='o', markerfacecolor=myblue, markeredgecolor=myblue, linestyle='-', color=myblue, capsize=10, label='$C_1=0$')
-            axs[3,k].errorbar(Es, pa[1,:], yerr=pa_err[:,0,:], marker='o', markerfacecolor=myred, markeredgecolor=myred, linestyle='-', color=myred, capsize=10, label='$C_1=0.5$')
-            axs[3,k].errorbar(Es, pa[2,:], yerr=pa_err[:,0,:], marker='o', markerfacecolor=mygreen, markeredgecolor=mygreen, linestyle='-', color=mygreen, capsize=10, label='$C_1=1$')
-            axs[3,k].errorbar(Es, pa[3,:], yerr=pa_err[:,0,:], marker='o', markerfacecolor=myyellow, markeredgecolor=myyellow, linestyle='-', color=myyellow, capsize=10, label='$C_1=2$')
+            axs[3,k].errorbar(Es, pa[1,:], yerr=pa_err[:,0,:], marker='o', markerfacecolor=myred, markeredgecolor=myred, linestyle='-', color=myred, capsize=10, label='$C_1=0.05$')
+            axs[3,k].errorbar(Es, pa[2,:], yerr=pa_err[:,0,:], marker='o', markerfacecolor=mygreen, markeredgecolor=mygreen, linestyle='-', color=mygreen, capsize=10, label='$C_1=0.1$')
+            axs[3,k].errorbar(Es, pa[3,:], yerr=pa_err[:,0,:], marker='o', markerfacecolor=myyellow, markeredgecolor=myyellow, linestyle='-', color=myyellow, capsize=10, label='$C_1=0.2$')
           
             axs[3,k+1].set_xscale('log')
-            axs[3,k+1].set_ylim(0, 1*10**(-15))
+            axs[3,k+1].set_ylim(0, 1*10**(-5))
             axs[3,k+1].set_xlabel('$E$ (kPa)', fontsize=axes_labels)
-            axs[3,k+1].set_ylabel(r'$\rho_a$ ($\mu$mol/$\mu$m$^2$)', fontsize=axes_labels)
+            axs[3,k+1].set_ylabel(r'$\rho_a$ ($\mu$mol/dm$^2$)', fontsize=axes_labels)
             axs[3,k+1].grid(alpha=0.5, which='both', linestyle=':')
             axs[3,k+1].errorbar(Es, pa[4,:], yerr=pa_err[:,0,:], marker='o', markerfacecolor=myblue, markeredgecolor=myblue, linestyle='-', color=myblue, capsize=10, label='$C_1=0$')
-            axs[3,k+1].errorbar(Es, pa[5,:], yerr=pa_err[:,0,:], marker='o', markerfacecolor=myred, markeredgecolor=myred, linestyle='-', color=myred, capsize=10, label='$C_1=0.5$')
-            axs[3,k+1].errorbar(Es, pa[6,:], yerr=pa_err[:,0,:], marker='o', markerfacecolor=mygreen, markeredgecolor=mygreen, linestyle='-', color=mygreen, capsize=10, label='$C_1=1$')
-            axs[3,k+1].errorbar(Es, pa[7,:], yerr=pa_err[:,0,:], marker='o', markerfacecolor=myyellow, markeredgecolor=myyellow, linestyle='-', color=myyellow, capsize=10, label='$C_1=2$')
+            axs[3,k+1].errorbar(Es, pa[5,:], yerr=pa_err[:,0,:], marker='o', markerfacecolor=myred, markeredgecolor=myred, linestyle='-', color=myred, capsize=10, label='$C_1=0.05$')
+            axs[3,k+1].errorbar(Es, pa[6,:], yerr=pa_err[:,0,:], marker='o', markerfacecolor=mygreen, markeredgecolor=mygreen, linestyle='-', color=mygreen, capsize=10, label='$C_1=0.1$')
+            axs[3,k+1].errorbar(Es, pa[7,:], yerr=pa_err[:,0,:], marker='o', markerfacecolor=myyellow, markeredgecolor=myyellow, linestyle='-', color=myyellow, capsize=10, label='$C_1=0.2$')
 
             k = 2
 
