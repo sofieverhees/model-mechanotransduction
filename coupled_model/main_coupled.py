@@ -217,7 +217,7 @@ Ec1 = Function(W)
 w1 = Function(E)
 u1 = Function(P)
 
-Ec1.interpolate(Expression('2*(pow(ca1,2.6)+0.1)', ca1 = ca1, degree=3))
+Ec1.interpolate(Expression('k7*(1+pow(k8*ca1,p))', ca1 = ca1, k7 = k7, k8 = k8, p = p, degree=3))
 Ec = Constant(0.6)
 #define lame parameters
 if coupling == 3 or coupling == 4:
@@ -303,7 +303,7 @@ for n in range(0,N):
         bulk_pa1.vector()[v2d_W[j]] = pa1.vector()[v2d_S[i]] 
 
     #define E_c
-    Ec1.interpolate(Expression('2*(pow(ca1,2.6)+0.1)', ca1 = ca1, degree=3))
+    Ec1.interpolate(Expression('k7*(1+pow(k8*ca1,p))', ca1 = ca1, k7 = k7, k8 = k8, p = p, degree=3))
 
     #define lame parametersx
     if coupling == 3 or coupling == 4:
