@@ -37,7 +37,7 @@ This code is organised in five different folders:
 The '_model' folders may include:
 - 'loop.sh': bash file running 'main.py' for different parameters and versions of the model.
 - 'main.py': creates simulations of the model, includes all main code.
-- 'summary_graphs.py': given the saved data from 'main.py', creates graphs that plot $f(\phi_a)$, $div(u)$, $\phi_a$ and $\rho_a$ as a function of the susbstrate stiffness $E$, as can be found in Figures 3, 5, 7 & S4_Fig (for the coupled model), and Figures A2 & A4 in Appendix A.1 (for the 'reduced model' without mechanics).
+- 'summary_graphs.py': given the saved data from 'main.py', creates graphs that plot $f(\phi_a)$, $div(u)$, $\phi_a$ and $\rho_a$ as a function of the susbstrate stiffness $E$, as can be found in Figures 4, 6, 8 & S4_Fig (for the coupled model), and Figures A2 & A4 in Appendix A.1 (for the 'reduced model' without mechanics).
 - 'tempstats.py': given the saved data from 'main.py', creates graphs that plot $f(\phi_a)$, $div(u)$, $\phi_a$ and $\rho_a$ as a function of time, as can be found in Figure A5 in Appendix A.2.
 
 The 'parameter_sensitivity_analysis' includes:
@@ -65,9 +65,9 @@ The 'parameter_sensitivity_analysis' includes:
 
 ## Relate Results to Figures
 If the files are run as instructed, a folder 'results' will be created including the following subfolders
-- 'simulations': includes simulation results (.vtu and .pvd), which are visualised with [Paraview](https://www.paraview.org/) 5.10.0-RC1 and correspond to Figures 1, 2, 4, 6, 8, S1_Fig, S2_Fig, S3_Fig, and Figures A7 in Appendix A.5 and A9 in Appendix A.7.
+- 'simulations': includes simulation results (.vtu and .pvd), which are visualised with [Paraview](https://www.paraview.org/) 5.10.0-RC1 and correspond to Figures 2, 3, 5, 7, 9, S1_Fig, S2_Fig, S3_Fig, and Figures A7 in Appendix A.5 and A9 in Appendix A.7.
 - 'temp': includes saved numpy arrays (.npy) with the discrete time derivative, L2-norm, minumum and maximum values of $\phi_a$, $\phi_d$, $\rho_a$ and $u$ as well as other variables saved at each time step.
-- 'figures': includes figures (.png) that correspond to Figures 3, 5, 7 and S4_Fig, Figures A2 & A4 in Appendix A.1, and Figure A5 in Appendix A.2.
+- 'figures': includes figures (.png) that correspond to Figures 4, 6, 8 and S4_Fig, Figures A2 & A4 in Appendix A.1, and Figure A5 in Appendix A.2.
 
 ### Different parameters/ versions
 The resulting files will be named according to the different parameters and version that can be chosen, e.g. for the 'reduced model', the simululation results are named 
@@ -82,7 +82,7 @@ where `var` is the variable $\phi_d$ if it states `cd`, $\phi_a$ if `ca`, $\rho_
 
 where `coupling` can be 1 --> $E_c=0.6$ & $C_1 = 0$; 2 --> $E_c=0.6$ & $C_1 = 0.1$; 3 --> $E_c=f(\phi_a)$ & $C_1 = 0$; 4 --> $E_c=f(\phi_a)$ & $C_1 = 0.1$,
 
-Figure 1: 
+Figure 2: 
 - coupled`coupling`_2D_cd_partfixed_m1_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_2D_cd_partfixed_m1_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_2D_cd_partfixed_m1_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
@@ -96,7 +96,7 @@ Figure 1:
 - coupled`coupling`_2D_u_partfixed_m1_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_2D_u_partfixed_m1_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 
-Figure 2:
+Figure 3:
 - coupled`coupling`_2D_cd_partfixed_m0_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_2D_cd_partfixed_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_2D_cd_partfixed_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
@@ -110,10 +110,10 @@ Figure 2:
 - coupled`coupling`_2D_u_partfixed_m0_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_2D_u_partfixed_m0_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 
-Figure 3:
+Figure 4:
 - AllGraphsMean_partfixed_2D_dt=0.05_T=10_k6=1.png
 
-Figure 4: 
+Figure 5: 
 - coupled`coupling`_cd_partfixed_m1_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_cd_partfixed_m1_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_cd_partfixed_m1_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
@@ -127,10 +127,10 @@ Figure 4:
 - coupled`coupling`_u_partfixed_m1_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_u_partfixed_m1_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 
-Figure 5:
+Figure 6:
 - AllGraphsMean_partfixed_dt=0.05_T=10_k6=1.png
 
-Figure 6: 
+Figure 7: 
 - coupled`coupling`_cd_neumann_m1_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_cd_neumann_m1_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_cd_neumann_m1_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
@@ -144,10 +144,10 @@ Figure 6:
 - coupled`coupling`_u_neumann_m1_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_u_neumann_m1_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
 
-Figure 7:
+Figure 8:
 - AllGraphsMean_neumann_dt=0.05_T=10_k6=1.png
 
-Figure 8: 
+Figure 9: 
 - coupled`coupling`_2D_cd_neumann_m1_dt=0.05_T=10_k6=1.0_0.1E.pvd
 - coupled`coupling`_2D_cd_neumann_m1_dt=0.05_T=10_k6=1.0_5.7E.pvd
 - coupled`coupling`_2D_cd_neumann_m1_dt=0.05_T=10_k6=1.0_7000000.0E.pvd
